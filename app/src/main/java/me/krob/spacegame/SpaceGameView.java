@@ -1,46 +1,38 @@
-package me.krob.spacegame;// package com.example.glenn.spacegame;
+package me.krob.spacegame;
 
 
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
-import android.media.AudioManager;
-import android.media.SoundPool;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.io.IOException;
-
 public class SpaceGameView extends SurfaceView implements Runnable{
-    private static final String DATA = "Score: %s Lives: %s FPS: %s";
+    private static final String TOP_TEXT = "Score: %s Lives: %s FPS: %s";
+    private static final int LIVES = 4;
+    private static final int SCORE = 10;
 
     private final Context context;
-
-    private Thread thread = null;
-
     private final SurfaceHolder holder;
-
-    private volatile boolean playing;
-    private boolean paused = true;
-
-    private Canvas canvas;
     private final Paint paint;
-
-    private long framesPerSecond, lastFrameTime;
 
     private final int screenX;
     private final int screenY;
 
-    public int score = 0;
+    private Spaceship spaceship;
 
-    private int lives = 4;
-    private Spaceship spaceShip;
+    private Thread thread = null;
+    private volatile boolean playing;
+    private boolean paused = true;
+
+    private Canvas canvas;
+
+    public int score = SCORE, lives = LIVES;
+
+    private long framesPerSecond;
 
     public SpaceGameView(Context context, int x, int y) {
         super(context);
@@ -56,10 +48,37 @@ public class SpaceGameView extends SurfaceView implements Runnable{
     }
 
     private void initLevel(){
-        spaceShip = new Spaceship(context, screenX, screenY);
+        spaceship = new Spaceship(this, context, screenX, screenY);
     }
 
-    @Override
+    private void update() {
+        spaceship.update(framesPerSecond);
+    }
+
+    private void draw() {
+        if (holder.getSurface().isValid()) {
+            canvas = holder.lockCanvas();
+
+            drawBackground();
+
+            spaceship.draw(canvas, paint);
+
+            updateTopText();
+
+            holder.unlockCanvasAndPost(canvas);
+        }
+    }
+
+    private void drawBackground() {
+        canvas.drawColor(Color.argb(255, 26, 128, 182));
+    }
+
+    private void updateTopText() {
+        paint.setColor(Color.argb(255,  249, 129, 0));
+        paint.setTextSize(40);
+        canvas.drawText(String.format(TOP_TEXT, score, lives, framesPerSecond), 10,50, paint);
+    }
+
     public void run() {
         while (playing) {
             score = 10;
@@ -72,37 +91,10 @@ public class SpaceGameView extends SurfaceView implements Runnable{
 
             draw();
 
-            lastFrameTime = System.currentTimeMillis() - startTime;
+            long lastFrameTime = System.currentTimeMillis() - startTime;
             if (lastFrameTime >= 1) {
                 framesPerSecond = 1000 / lastFrameTime;
             }
-        }
-    }
-
-    private void update(){
-        spaceShip.update(framesPerSecond);
-        checkCollisions();
-    }
-
-    private void checkCollisions(){
-
-    }
-
-    private void draw(){
-        if (holder.getSurface().isValid()) {
-            canvas = holder.lockCanvas();
-
-            canvas.drawColor(Color.argb(255, 26, 128, 182));
-
-            paint.setColor(Color.argb(255,  255, 255, 255));
-
-            canvas.drawBitmap(spaceShip.getBitmap(), spaceShip.getX(), spaceShip.getY() , paint);
-
-            paint.setColor(Color.argb(255,  249, 129, 0));
-            paint.setTextSize(40);
-            canvas.drawText(String.format(DATA, score, lives, framesPerSecond), 10,50, paint);
-
-            holder.unlockCanvasAndPost(canvas);
         }
     }
 
@@ -122,27 +114,12 @@ public class SpaceGameView extends SurfaceView implements Runnable{
         Log.i("[Info]", "Started thread.");
     }
 
-    @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_DOWN:
-                paused = false;
-
-                if(event.getY() > screenY - (screenY / 2.0)) {
-                    if (event.getX() > screenX / 2.0) {
-                        spaceShip.moveState = Spaceship.MoveState.RIGHT;
-                    } else {
-                        spaceShip.moveState = Spaceship.MoveState.LEFT;
-                    }
-                }
-
-                break;
-            case MotionEvent.ACTION_UP:
-                if (event.getY() > screenY - (screenY / 2.0)) {
-                    spaceShip.moveState = Spaceship.MoveState.NONE;
-                }
-                break;
-        }
+        spaceship.handleMovement(event);
         return true;
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
     }
 }

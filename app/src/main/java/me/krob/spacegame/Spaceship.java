@@ -1,101 +1,110 @@
-package me.krob.spacegame;// package com.example.glenn.spacegame;
+package me.krob.spacegame;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.RectF;
+import android.view.MotionEvent;
 
 public class Spaceship {
     private static final int MOVEMENT_SPEED = 350;
 
+    private final SpaceGameView view;
+
     private final RectF rect;
 
+    public Bitmap bitmap;
     private Bitmap bitmapup;
     private Bitmap bitmapleft;
     private Bitmap bitmapright;
     private Bitmap bitmapdown;
-    public Bitmap currentBitmap;
 
-    private final float height;
-    private final float length;
-    private float x;
-    private float y;
+    private final float height, length;
+    private float locX, locY;
 
-    private final int screenX;
-    private final int screenY;
+    private final int screenX, screenY;
 
     public MoveState moveState = MoveState.NONE;
     private int movementSpeed = MOVEMENT_SPEED;
 
-    public Spaceship(Context context, int screenX, int screenY){
+    public Spaceship(SpaceGameView view, Context context, int screenX, int screenY){
+        this.view = view;
 
         rect = new RectF();
 
-        length = screenX/10;
-        height = screenY/10;
+        length = screenX / 10f;
+        height = screenY / 10f;
 
-        x = screenX / 2;
-        y = screenY / 2;
+        locX = screenX / 2f;
+        locY = screenY / 2f;
 
-        bitmapup = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipup);
+        createBitmaps(context);
 
-        // stretch the bitmap to a size appropriate for the screen resolution
-        bitmapup = Bitmap.createScaledBitmap(bitmapup,
-                (int) (length),
-                (int) (height),
-                false);
-
-      //  bitmapup = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipup);
-      //  bitmapup = Bitmap.createScaledBitmap(bitmapup, (int) (length), (int) (height),false);
-
-        bitmapright = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipright);
-        bitmapright = Bitmap.createScaledBitmap(bitmapright, (int) (length), (int) (height),false);
-
-        bitmapleft = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipleft);
-        bitmapleft = Bitmap.createScaledBitmap(bitmapleft, (int) (length), (int) (height),false);
-
-        bitmapdown = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipdown);
-        bitmapdown = Bitmap.createScaledBitmap(bitmapdown, (int) (length), (int) (height),false);
-
-        currentBitmap = bitmapleft;
         this.screenX = screenX;
         this.screenY = screenY;
     }
 
+    private void createBitmaps(Context context) {
+        Bitmap decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipup);
+        bitmap = Bitmap.createScaledBitmap(decoded, (int) length, (int) height, false);
+
+        decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipup);
+        bitmapup = Bitmap.createScaledBitmap(decoded, (int) (length), (int) (height),false);
+
+        decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipright);
+        bitmapright = Bitmap.createScaledBitmap(decoded, (int) (length), (int) (height),false);
+
+        decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipleft);
+        bitmapleft = Bitmap.createScaledBitmap(decoded, (int) (length), (int) (height),false);
+
+        decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipdown);
+        bitmapdown = Bitmap.createScaledBitmap(decoded, (int) (length), (int) (height),false);
+    }
+
+    public void draw(Canvas canvas, Paint paint) {
+        paint.setColor(Color.argb(255,  255, 255, 255));
+        canvas.drawBitmap(bitmap, locX, locY , paint);
+    }
+
     public void update(long fps){
+        handleCollisions();
+
         float movement = movementSpeed / fps;
 
         switch (moveState) {
             case LEFT:
-                x -= movement;
-                currentBitmap = bitmapleft;
+                locX -= movement;
+                bitmap = bitmapleft;
 
-                if ((x+length)<=0) {
-                    x = screenX;
+                if ((locX +length)<=0) {
+                    locX = screenX;
                 }
                 break;
             case RIGHT:
-                x += movement;
-                currentBitmap = bitmapright;
+                locX += movement;
+                bitmap = bitmapright;
 
-                if (x>=screenX) {
-                    x = 0 - length;
+                if (locX >=screenX) {
+                    locX = 0 - length;
                 }
                 break;
             case UP:
-                y -= movement;
-                currentBitmap = bitmapup;
+                locY -= movement;
+                bitmap = bitmapup;
 
-                if (y+height <=0) {
-                    y = screenY;
+                if (locY +height <=0) {
+                    locY = screenY;
                 }
                 break;
             case DOWN:
-                y += movement;
-                currentBitmap = bitmapdown;
+                locY += movement;
+                bitmap = bitmapdown;
 
-                if (y>=screenY) {
-                    y = 0 - height;
+                if (locY >=screenY) {
+                    locY = 0 - height;
                 }
                 break;
         }
@@ -103,36 +112,75 @@ public class Spaceship {
         updateRect();
     }
 
+    public void handleMovement(MotionEvent event) {
+        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN:
+                view.setPaused(false);
+
+                if(event.getY() > screenY - (screenY / 2.0)) {
+                    if (event.getX() > screenX / 2.0) {
+                        moveState = MoveState.RIGHT;
+                    } else {
+                        moveState = MoveState.LEFT;
+                    }
+                }
+
+                break;
+            case MotionEvent.ACTION_UP:
+                if (event.getY() > screenY - (screenY / 2.0)) {
+                    moveState = MoveState.NONE;
+                }
+                break;
+        }
+    }
+
+    private void handleCollisions() {
+        if (locX > screenX - length) {
+            locX = 0;
+        }
+
+        if (locX < 0 - length) {
+            locX = screenX;
+        }
+
+        if (locY > screenY - length) {
+            locY = 0;
+        }
+
+        if (locY < 0 - length) {
+            locY = screenY;
+        }
+    }
+
     private void updateRect() {
-        rect.set(x, y, x + length, y + height);
+        rect.set(locX, locY, locX + length, locY + height);
     }
 
     public Bitmap getBitmap(){
-        return currentBitmap;
+        return bitmap;
     }
 
-    public float getX(){
-        return x;
+    public float getLocX(){
+        return locX;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public void setLocX(int locX) {
+        this.locX = locX;
     }
 
-    public float getY(){
-            return y;
-        }
+    public float getLocY(){
+        return locY;
+    }
 
-    public void setY(int y){
-            this.y = y;
+    public void setLocY(int locY){
+            this.locY = locY;
     }
 
     public float getLength(){
         return length;
     }
 
-
-    enum MoveState {
+    public enum MoveState {
         NONE, UP, DOWN, LEFT, RIGHT
     }
 }
