@@ -18,209 +18,131 @@ import android.view.SurfaceView;
 import java.io.IOException;
 
 public class SpaceGameView extends SurfaceView implements Runnable{
+    private static final String DATA = "Score: %s Lives: %s FPS: %s";
 
-    private Context context;
+    private final Context context;
 
-    // This is our thread
-    private Thread gameThread = null;
+    private Thread thread = null;
 
-    // Our SurfaceHolder to lock the surface before we draw our graphics
-    private SurfaceHolder ourHolder;
+    private final SurfaceHolder holder;
 
-    // A boolean which we will set and unset
-    // when the game is running- or not.
     private volatile boolean playing;
-
-    // Game is paused at the start
     private boolean paused = true;
 
-    // A Canvas and a Paint object
     private Canvas canvas;
-    private Paint paint;
+    private final Paint paint;
 
-    // This variable tracks the game frame rate
-    private long fps;
+    private long framesPerSecond, lastFrameTime;
 
-    // This is used to help calculate the fps
-    private long timeThisFrame;
+    private final int screenX;
+    private final int screenY;
 
-    // The size of the screen in pixels
-    private int screenX;
-    private int screenY;
-
-    // The score
     public int score = 0;
 
-    // Lives
     private int lives = 4;
-    Spaceship spaceShip;
+    private Spaceship spaceShip;
 
-    // This special constructor method runs
     public SpaceGameView(Context context, int x, int y) {
-
-        // The next line of code asks the
-        // SurfaceView class to set up our object.
-        // How kind.
         super(context);
-
-        // Make a globally available copy of the context so we can use it in another method
         this.context = context;
 
-        // Initialize ourHolder and paint objects
-        ourHolder = getHolder();
+        holder = getHolder();
         paint = new Paint();
 
         screenX = x;
         screenY = y;
 
-
-
         initLevel();
     }
 
-
-
     private void initLevel(){
-
         spaceShip = new Spaceship(context, screenX, screenY);
-
     }
-
 
     @Override
     public void run() {
         while (playing) {
-        score = 10;
-            // Capture the current time in milliseconds in startFrameTime
-            long startFrameTime = System.currentTimeMillis();
+            score = 10;
 
-            // Update the frame
+            long startTime = System.currentTimeMillis();
+
             if(!paused){
                 update();
             }
 
-            // Draw the frame
             draw();
 
-            // Calculate the fps this frame
-            // We can then use the result to
-            // time animations and more.
-            timeThisFrame = System.currentTimeMillis() - startFrameTime;
-            if (timeThisFrame >= 1) {
-                fps = 1000 / timeThisFrame;
+            lastFrameTime = System.currentTimeMillis() - startTime;
+            if (lastFrameTime >= 1) {
+                framesPerSecond = 1000 / lastFrameTime;
             }
-
         }
-
     }
-
-
 
     private void update(){
-
-        spaceShip.update(fps);
+        spaceShip.update(framesPerSecond);
         checkCollisions();
-
     }
-
 
     private void checkCollisions(){
-      
-	  
 
     }
 
-
-
-
     private void draw(){
-        // Make sure our drawing surface is valid or we crash
-        if (ourHolder.getSurface().isValid()) {
-            // Lock the canvas ready to draw
-            canvas = ourHolder.lockCanvas();
+        if (holder.getSurface().isValid()) {
+            canvas = holder.lockCanvas();
 
-            // Draw the background color
             canvas.drawColor(Color.argb(255, 26, 128, 182));
 
-            // Choose the brush color for drawing
             paint.setColor(Color.argb(255,  255, 255, 255));
 
-            //  draw the defender
             canvas.drawBitmap(spaceShip.getBitmap(), spaceShip.getX(), spaceShip.getY() , paint);
 
-
-
-
-            // Draw the score and remaining lives
-            // Change the brush color
             paint.setColor(Color.argb(255,  249, 129, 0));
             paint.setTextSize(40);
-            canvas.drawText("Score: " + score + "   Lives: " + lives, 10,50, paint);
+            canvas.drawText(String.format(DATA, score, lives, framesPerSecond), 10,50, paint);
 
-            // Draw everything to the screen
-            ourHolder.unlockCanvasAndPost(canvas);
+            holder.unlockCanvasAndPost(canvas);
         }
     }
 
-
-
-
-    // If SpaceGameActivity is paused/stopped
-    // shutdown our thread.
     public void pause() {
         playing = false;
         try {
-            gameThread.join();
+            thread.join();
         } catch (InterruptedException e) {
-            Log.e("Error:", "joining thread");
+            Log.e("[Error]", "Failed to join thread.");
         }
-
     }
 
-
-
-    // If SpaceInvadersActivity is started then
-    // start our thread.
     public void resume() {
         playing = true;
-        gameThread = new Thread(this);
-        gameThread.start();
+        thread = new Thread(this);
+        thread.start();
+        Log.i("[Info]", "Started thread.");
     }
 
-
-    // The SurfaceView class implements onTouchListener
-    // So we can override this method and detect screen touches.
     @Override
-    public boolean onTouchEvent(MotionEvent motionEvent) {
-
-        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-
-            // Player has touched the screen
-
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
-
                 paused = false;
 
-				// *******************************************
-                // Put space ship movement control codes here
-				// *******************************************
+                if(event.getY() > screenY - (screenY / 2.0)) {
+                    if (event.getX() > screenX / 2.0) {
+                        spaceShip.moveState = Spaceship.MoveState.RIGHT;
+                    } else {
+                        spaceShip.moveState = Spaceship.MoveState.LEFT;
+                    }
+                }
 
                 break;
-
-            // Player has removed finger from screen
             case MotionEvent.ACTION_UP:
-
-				// *******************************************
-				// Put space ship movement control codes here
-				// *******************************************
-			 
+                if (event.getY() > screenY - (screenY / 2.0)) {
+                    spaceShip.moveState = Spaceship.MoveState.NONE;
+                }
                 break;
         }
         return true;
     }
-
-
-
-
-
-}  // end class
+}
