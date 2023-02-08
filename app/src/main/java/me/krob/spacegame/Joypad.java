@@ -35,7 +35,9 @@ public class Joypad {
     }
 
     public void draw(Canvas canvas, Paint paint) {
+        paint.setAlpha(40);
         canvas.drawBitmap(bitmap, minX, minY, paint);
+        paint.setAlpha(100);
     }
 
     public void handleMovement(MotionEvent event) {
@@ -46,7 +48,7 @@ public class Joypad {
                 float x = event.getX();
                 float y = event.getY();
 
-                // TODO: Should work for all screen sizes but should probs tidy it up
+                // TODO: Should work for all screen sizes but probs not optimal
                 if (x > minX && x < maxX) {
                     if (y > minY && y < maxY) {
                         float diffX = (maxX - minX) / 3f;

@@ -92,7 +92,7 @@ public class SpaceGameView extends SurfaceView implements Runnable{
      */
     private void drawText(Canvas canvas) {
         paint.setColor(Color.argb(255,  249, 129, 0)); // Set the colour
-        paint.setTextSize(40); // Set the text size
+        paint.setTextSize(50); // Set the text size
         canvas.drawText(String.format(TOP_TEXT, score, lives, framesPerSecond), 10,50, paint); // Draw the text
     }
 
