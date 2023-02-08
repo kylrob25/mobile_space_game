@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Space;
 
 public class SpaceGameView extends SurfaceView implements Runnable{
     private static final String TOP_TEXT = "Score: %s Lives: %s FPS: %s";
@@ -23,6 +24,7 @@ public class SpaceGameView extends SurfaceView implements Runnable{
     private final int screenY;
 
     private Spaceship spaceship;
+    private Joypad joypad;
 
     private Thread thread = null;
     private volatile boolean playing;
@@ -49,7 +51,8 @@ public class SpaceGameView extends SurfaceView implements Runnable{
      * Initiating the spaceship
      */
     private void initLevel(){
-        spaceship = new Spaceship(this, context, screenX, screenY);
+        spaceship = new Spaceship(this, context);
+        joypad = new Joypad(this, context);
     }
 
     /**
@@ -69,6 +72,7 @@ public class SpaceGameView extends SurfaceView implements Runnable{
             drawBackground(canvas);
 
             spaceship.draw(canvas, paint);
+            joypad.draw(canvas, paint);
 
             drawText(canvas);
 
@@ -142,11 +146,23 @@ public class SpaceGameView extends SurfaceView implements Runnable{
      * @return - true
      */
     public boolean onTouchEvent(MotionEvent event) {
-        spaceship.handleMovement(event);
+        joypad.handleMovement(event);
         return true;
     }
 
     public void setPaused(boolean paused) {
         this.paused = paused;
+    }
+
+    public float getScreenX() {
+        return screenX;
+    }
+
+    public float getScreenY() {
+        return screenY;
+    }
+
+    public Spaceship getSpaceship() {
+        return spaceship;
     }
 }
