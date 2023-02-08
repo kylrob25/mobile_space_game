@@ -28,8 +28,6 @@ public class SpaceGameView extends SurfaceView implements Runnable{
     private volatile boolean playing;
     private boolean paused = true;
 
-    private Canvas canvas;
-
     public int score = SCORE, lives = LIVES;
 
     private long framesPerSecond;
@@ -66,13 +64,13 @@ public class SpaceGameView extends SurfaceView implements Runnable{
      */
     private void draw() {
         if (holder.getSurface().isValid()) {
-            canvas = holder.lockCanvas(); // Locking the canvas
+            Canvas canvas = holder.lockCanvas(); // Locking the canvas
 
-            drawBackground();
+            drawBackground(canvas);
 
             spaceship.draw(canvas, paint);
 
-            drawText();
+            drawText(canvas);
 
             holder.unlockCanvasAndPost(canvas); // Unlock the canvas
         }
@@ -81,14 +79,14 @@ public class SpaceGameView extends SurfaceView implements Runnable{
     /**
      * Drawing the background to the canvas
      */
-    private void drawBackground() {
+    private void drawBackground(Canvas canvas) {
         canvas.drawColor(Color.argb(255, 26, 128, 182)); // Draw the background colour
     }
 
     /**
      * Drawing the display text
      */
-    private void drawText() {
+    private void drawText(Canvas canvas) {
         paint.setColor(Color.argb(255,  249, 129, 0)); // Set the colour
         paint.setTextSize(40); // Set the text size
         canvas.drawText(String.format(TOP_TEXT, score, lives, framesPerSecond), 10,50, paint); // Draw the text
