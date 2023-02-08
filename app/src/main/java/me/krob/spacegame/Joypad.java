@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 
 public class Joypad {
@@ -12,11 +13,18 @@ public class Joypad {
     private Bitmap bitmap;
 
     private final float size;
+    private final float maxX, maxY, minX, minY;
 
     public Joypad(SpaceGameView view, Context context) {
         this.view = view;
 
-        size = view.getScreenX() / 4.8f;
+        size = view.getScreenX() / 4.5f;
+
+        minX = view.getScreenX() - (size + (view.getScreenX() * 0.025f));
+        minY = view.getScreenY() - (size + (view.getScreenY() * 0.075f));
+
+        maxX = minX + size;
+        maxY = minX + size;
 
         createBitmap(context);
     }
@@ -27,7 +35,7 @@ public class Joypad {
     }
 
     public void draw(Canvas canvas, Paint paint) {
-        canvas.drawBitmap(bitmap, view.getScreenX() - (size + (size * 0.1f)), view.getScreenY() - (size + (size * 0.1f)), paint);
+        canvas.drawBitmap(bitmap, minX, minY, paint);
     }
 
     public void handleMovement(MotionEvent event) {
@@ -35,23 +43,29 @@ public class Joypad {
             case MotionEvent.ACTION_DOWN:
                 view.setPaused(false);
 
-                float xDiff = view.getScreenX() - event.getX();
-                float yDiff = view.getScreenY() - event.getY();
+                float x = event.getX();
+                float y = event.getY();
 
-                // TODO: Figure out the math to support any screen size
-                if (xDiff > 165 && xDiff < 330) {
-                    if (yDiff > 400 && yDiff < 600) {
-                        view.getSpaceship().setMoveState(MoveState.UP);
-                    } else if (yDiff > 100 && yDiff < 290) {
-                        view.getSpaceship().setMoveState(MoveState.DOWN);
-                    }
-                } else if (xDiff > 300 && xDiff < 500) {
-                    if (yDiff > 260 && yDiff < 430) {
-                        view.getSpaceship().setMoveState(MoveState.LEFT);
-                    }
-                } else if (xDiff > 0 && xDiff < 350) {
-                    if (yDiff > 260 && yDiff < 430) {
-                        view.getSpaceship().setMoveState(MoveState.RIGHT);
+                // TODO: Should work for all screen sizes but should probs tidy it up
+                if (x > minX && x < maxX) {
+                    if (y > minY && y < maxY) {
+                        float diffX = (maxX - minX) / 3f;
+
+                        if (x > (minX+diffX) && x < (maxX-diffX)) {
+                            if (y < minY+diffX) {
+                                view.getSpaceship().setMoveState(MoveState.UP);
+                            } else if (y > minY+(diffX*2) && y < minY+(diffX*3)) {
+                                view.getSpaceship().setMoveState(MoveState.DOWN);
+                            }
+                        }
+
+                        if (x < minX + (diffX*3) && y > minY+diffX && y < minY+(diffX*2)) {
+                            if (x < minX+diffX) {
+                                view.getSpaceship().setMoveState(MoveState.LEFT);
+                            } else if (x > minX+(diffX*2)) {
+                                view.getSpaceship().setMoveState(MoveState.RIGHT);
+                            }
+                        }
                     }
                 }
 
