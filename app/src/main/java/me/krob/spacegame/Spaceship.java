@@ -17,10 +17,10 @@ public class Spaceship {
     private final RectF rect;
 
     public Bitmap bitmap;
-    private Bitmap bitmapup;
-    private Bitmap bitmapleft;
-    private Bitmap bitmapright;
-    private Bitmap bitmapdown;
+    private Bitmap bitmapUp;
+    private Bitmap bitmapLeft;
+    private Bitmap bitmapRight;
+    private Bitmap bitmapDown;
 
     private final float height, length;
     private float locX, locY;
@@ -47,37 +47,50 @@ public class Spaceship {
         this.screenY = screenY;
     }
 
+    /**
+     * Creating our bitmap images
+     * @param context
+     */
     private void createBitmaps(Context context) {
         Bitmap decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipup);
         bitmap = Bitmap.createScaledBitmap(decoded, (int) length, (int) height, false);
 
         decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipup);
-        bitmapup = Bitmap.createScaledBitmap(decoded, (int) (length), (int) (height),false);
+        bitmapUp = Bitmap.createScaledBitmap(decoded, (int) (length), (int) (height),false);
 
         decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipright);
-        bitmapright = Bitmap.createScaledBitmap(decoded, (int) (length), (int) (height),false);
+        bitmapRight = Bitmap.createScaledBitmap(decoded, (int) (length), (int) (height),false);
 
         decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipleft);
-        bitmapleft = Bitmap.createScaledBitmap(decoded, (int) (length), (int) (height),false);
+        bitmapLeft = Bitmap.createScaledBitmap(decoded, (int) (length), (int) (height),false);
 
         decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipdown);
-        bitmapdown = Bitmap.createScaledBitmap(decoded, (int) (length), (int) (height),false);
+        bitmapDown = Bitmap.createScaledBitmap(decoded, (int) (length), (int) (height),false);
     }
 
+    /**
+     * Draw the object
+     * @param canvas
+     * @param paint
+     */
     public void draw(Canvas canvas, Paint paint) {
         paint.setColor(Color.argb(255,  255, 255, 255));
         canvas.drawBitmap(bitmap, locX, locY , paint);
     }
 
+    /**
+     * Updating the location
+     * @param fps
+     */
     public void update(long fps){
         handleCollisions();
 
-        float movement = movementSpeed / fps;
+        long movement = movementSpeed / fps;
 
         switch (moveState) {
             case LEFT:
                 locX -= movement;
-                bitmap = bitmapleft;
+                bitmap = bitmapLeft;
 
                 if ((locX +length)<=0) {
                     locX = screenX;
@@ -85,7 +98,7 @@ public class Spaceship {
                 break;
             case RIGHT:
                 locX += movement;
-                bitmap = bitmapright;
+                bitmap = bitmapRight;
 
                 if (locX >=screenX) {
                     locX = 0 - length;
@@ -93,7 +106,7 @@ public class Spaceship {
                 break;
             case UP:
                 locY -= movement;
-                bitmap = bitmapup;
+                bitmap = bitmapUp;
 
                 if (locY +height <=0) {
                     locY = screenY;
@@ -101,7 +114,7 @@ public class Spaceship {
                 break;
             case DOWN:
                 locY += movement;
-                bitmap = bitmapdown;
+                bitmap = bitmapDown;
 
                 if (locY >=screenY) {
                     locY = 0 - height;
@@ -112,6 +125,10 @@ public class Spaceship {
         updateRect();
     }
 
+    /**
+     * Handle the movement
+     * @param event
+     */
     public void handleMovement(MotionEvent event) {
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
@@ -134,6 +151,9 @@ public class Spaceship {
         }
     }
 
+    /**
+     * Handle the collision
+     */
     private void handleCollisions() {
         if (locX > screenX - length) {
             locX = 0;
@@ -152,6 +172,9 @@ public class Spaceship {
         }
     }
 
+    /**
+     * Updating the rect
+     */
     private void updateRect() {
         rect.set(locX, locY, locX + length, locY + height);
     }

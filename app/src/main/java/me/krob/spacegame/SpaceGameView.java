@@ -47,50 +47,68 @@ public class SpaceGameView extends SurfaceView implements Runnable{
         initLevel();
     }
 
+    /**
+     * Initiating the spaceship
+     */
     private void initLevel(){
         spaceship = new Spaceship(this, context, screenX, screenY);
     }
 
+    /**
+     * Updating the spaceship
+     */
     private void update() {
         spaceship.update(framesPerSecond);
     }
 
+    /**
+     * Drawing our background and objects
+     */
     private void draw() {
         if (holder.getSurface().isValid()) {
-            canvas = holder.lockCanvas();
+            canvas = holder.lockCanvas(); // Locking the canvas
 
             drawBackground();
 
             spaceship.draw(canvas, paint);
 
-            updateTopText();
+            drawText();
 
-            holder.unlockCanvasAndPost(canvas);
+            holder.unlockCanvasAndPost(canvas); // Unlock the canvas
         }
     }
 
+    /**
+     * Drawing the background to the canvas
+     */
     private void drawBackground() {
-        canvas.drawColor(Color.argb(255, 26, 128, 182));
+        canvas.drawColor(Color.argb(255, 26, 128, 182)); // Draw the background colour
     }
 
-    private void updateTopText() {
-        paint.setColor(Color.argb(255,  249, 129, 0));
-        paint.setTextSize(40);
-        canvas.drawText(String.format(TOP_TEXT, score, lives, framesPerSecond), 10,50, paint);
+    /**
+     * Drawing the display text
+     */
+    private void drawText() {
+        paint.setColor(Color.argb(255,  249, 129, 0)); // Set the colour
+        paint.setTextSize(40); // Set the text size
+        canvas.drawText(String.format(TOP_TEXT, score, lives, framesPerSecond), 10,50, paint); // Draw the text
     }
 
+    /**
+     * The game loop
+     */
     public void run() {
         while (playing) {
-            score = 10;
-
             long startTime = System.currentTimeMillis();
 
+            // Ensuring we aren't paused before updating
             if(!paused){
                 update();
             }
 
             draw();
 
+            // Calculating the frame times
             long lastFrameTime = System.currentTimeMillis() - startTime;
             if (lastFrameTime >= 1) {
                 framesPerSecond = 1000 / lastFrameTime;
@@ -98,6 +116,9 @@ public class SpaceGameView extends SurfaceView implements Runnable{
         }
     }
 
+    /**
+     * Pause the game by closing the thread
+     */
     public void pause() {
         playing = false;
         try {
@@ -107,6 +128,9 @@ public class SpaceGameView extends SurfaceView implements Runnable{
         }
     }
 
+    /**
+     * Start the game by creating and starting the thread
+     */
     public void resume() {
         playing = true;
         thread = new Thread(this);
@@ -114,6 +138,11 @@ public class SpaceGameView extends SurfaceView implements Runnable{
         Log.i("[Info]", "Started thread.");
     }
 
+    /**
+     * Handling the user touch event
+     * @param event - the motion event
+     * @return - true
+     */
     public boolean onTouchEvent(MotionEvent event) {
         spaceship.handleMovement(event);
         return true;
