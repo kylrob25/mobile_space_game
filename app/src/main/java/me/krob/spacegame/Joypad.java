@@ -11,18 +11,23 @@ public class Joypad {
     private final SpaceGameView view;
     private Bitmap bitmap;
 
+    private final float size;
+
     public Joypad(SpaceGameView view, Context context) {
         this.view = view;
+
+        size = view.getScreenX() / 4.8f;
+
         createBitmap(context);
     }
 
     private void createBitmap(Context context) {
         Bitmap decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.joystick);
-        bitmap = Bitmap.createScaledBitmap(decoded, 500, 500, false);
+        bitmap = Bitmap.createScaledBitmap(decoded, (int) size, (int) size, false);
     }
 
     public void draw(Canvas canvas, Paint paint) {
-        canvas.drawBitmap(bitmap, view.getScreenX() - 500, view.getScreenY() - 600, paint);
+        canvas.drawBitmap(bitmap, view.getScreenX() - (size + (size * 0.1f)), view.getScreenY() - (size + (size * 0.1f)), paint);
     }
 
     public void handleMovement(MotionEvent event) {
@@ -33,7 +38,7 @@ public class Joypad {
                 float xDiff = view.getScreenX() - event.getX();
                 float yDiff = view.getScreenY() - event.getY();
 
-                // TODO: Round these numbers off
+                // TODO: Figure out the math to support any screen size
                 if (xDiff > 165 && xDiff < 330) {
                     if (yDiff > 400 && yDiff < 600) {
                         view.getSpaceship().setMoveState(MoveState.UP);
