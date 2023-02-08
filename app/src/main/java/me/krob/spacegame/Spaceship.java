@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.MotionEvent;
 
 public class Spaceship {
@@ -21,6 +22,8 @@ public class Spaceship {
     private Bitmap bitmapLeft;
     private Bitmap bitmapRight;
     private Bitmap bitmapDown;
+
+    private Bitmap joystick;
 
     private final float height, length;
     private float locX, locY;
@@ -66,6 +69,9 @@ public class Spaceship {
 
         decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipdown);
         bitmapDown = Bitmap.createScaledBitmap(decoded, (int) (length), (int) (height),false);
+
+        decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.joystick);
+        joystick = Bitmap.createScaledBitmap(decoded, 500, 500, false);
     }
 
     /**
@@ -76,6 +82,8 @@ public class Spaceship {
     public void draw(Canvas canvas, Paint paint) {
         paint.setColor(Color.argb(255,  255, 255, 255));
         canvas.drawBitmap(bitmap, locX, locY , paint);
+
+        canvas.drawBitmap(joystick, screenX - 500, screenY - 600, paint);
     }
 
     /**
@@ -92,23 +100,23 @@ public class Spaceship {
                 locX -= movement;
                 bitmap = bitmapLeft;
 
-                if ((locX +length)<=0) {
-                    locX = screenX;
+                if (locX <= 0) {
+                    locX = screenX - length;
                 }
                 break;
             case RIGHT:
                 locX += movement;
                 bitmap = bitmapRight;
 
-                if (locX >=screenX) {
-                    locX = 0 - length;
+                if ((locX - length) >= screenX - 500) {
+                    locX = 0;
                 }
                 break;
             case UP:
                 locY -= movement;
                 bitmap = bitmapUp;
 
-                if (locY +height <=0) {
+                if (locY + height <= 0) {
                     locY = screenY;
                 }
                 break;
@@ -134,19 +142,31 @@ public class Spaceship {
             case MotionEvent.ACTION_DOWN:
                 view.setPaused(false);
 
-                if(event.getY() > screenY - (screenY / 2.0)) {
-                    if (event.getX() > screenX / 2.0) {
-                        moveState = MoveState.RIGHT;
-                    } else {
+                float xDiff = screenX - event.getX();
+                float yDiff = screenY - event.getY();
+
+                // TODO: Round these numbers off
+                if (xDiff > 165 && xDiff < 330) {
+                    if (yDiff > 400 && yDiff < 600) {
+                        moveState = MoveState.UP;
+                    } else if (yDiff > 100 && yDiff < 290) {
+                        moveState = MoveState.DOWN;
+                    }
+                } else if (xDiff > 300 && xDiff < 500) {
+                    if (yDiff > 260 && yDiff < 430) {
                         moveState = MoveState.LEFT;
+                    }
+                } else if (xDiff > 0 && xDiff < 350) {
+                    if (yDiff > 260 && yDiff < 430) {
+                        moveState = MoveState.RIGHT;
                     }
                 }
 
                 break;
             case MotionEvent.ACTION_UP:
-                if (event.getY() > screenY - (screenY / 2.0)) {
+                //if (event.getY() > screenY - (screenY / 2.0)) {
                     moveState = MoveState.NONE;
-                }
+                //}
                 break;
         }
     }
@@ -155,6 +175,7 @@ public class Spaceship {
      * Handle the collision
      */
     private void handleCollisions() {
+        /*
         if (locX > screenX - length) {
             locX = 0;
         }
@@ -170,13 +191,14 @@ public class Spaceship {
         if (locY < 0 - length) {
             locY = screenY;
         }
+         */
     }
 
     /**
      * Updating the rect
      */
     private void updateRect() {
-        rect.set(locX, locY, locX + length, locY + height);
+        rect.set(locX - length, locY, locX + length, locY + height);
     }
 
     public Bitmap getBitmap(){
