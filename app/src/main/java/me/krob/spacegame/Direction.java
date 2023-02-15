@@ -1,5 +1,5 @@
 package me.krob.spacegame;
 
-public enum MoveState {
+public enum Direction {
     NONE, UP, DOWN, LEFT, RIGHT
 }
