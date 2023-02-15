@@ -42,7 +42,7 @@ public class SpaceGameView extends SurfaceView implements Runnable {
 
     public int score = SCORE, lives = LIVES;
 
-    private long framesPerSecond, lastFrameTime;
+    private long framesPerSecond;
 
     public SpaceGameView(Context context, int x, int y) {
         super(context);
@@ -55,6 +55,28 @@ public class SpaceGameView extends SurfaceView implements Runnable {
         screenY = y;
 
         initLevel();
+    }
+
+    /**
+     * The game loop
+     */
+    public void run() {
+        while (playing) {
+            long startTime = System.currentTimeMillis();
+
+            // Ensuring we aren't paused before updating
+            if(!paused){
+                update();
+            }
+
+            draw();
+
+            // Calculating the frame times
+            long lastFrameTime = System.currentTimeMillis() - startTime;
+            if (lastFrameTime >= 1) {
+                framesPerSecond = 1000 / lastFrameTime;
+            }
+        }
     }
 
     /**
@@ -127,28 +149,6 @@ public class SpaceGameView extends SurfaceView implements Runnable {
     }
 
     /**
-     * The game loop
-     */
-    public void run() {
-        while (playing) {
-            long startTime = System.currentTimeMillis();
-
-            // Ensuring we aren't paused before updating
-            if(!paused){
-                update();
-            }
-
-            draw();
-
-            // Calculating the frame times
-            lastFrameTime = System.currentTimeMillis() - startTime;
-            if (lastFrameTime >= 1) {
-                framesPerSecond = 1000 / lastFrameTime;
-            }
-        }
-    }
-
-    /**
      * Pause the game by closing the thread
      */
     public void pause() {
@@ -168,6 +168,35 @@ public class SpaceGameView extends SurfaceView implements Runnable {
         thread = new Thread(this);
         thread.start();
         Log.i("[Info]", "Started thread.");
+    }
+
+    /**
+     * Register a bullet
+     * @param bullet - the bullet
+     */
+    public void registerBullet(Bullet bullet) {
+        bullets.add(bullet);
+    }
+
+    /**
+     * Remove a bullet
+     * @param bullet - the bullet
+     */
+    public void removeBullet(Bullet bullet) {
+        expiredBullets.add(bullet);
+    }
+
+    /**
+     * Remove a bullet
+     * @param id - the bullet id
+     */
+    public void removeBullet(int id) {
+        for (Bullet bullet : bullets) {
+            if (bullet.getId() == id) {
+                expiredBullets.add(bullet);
+                break;
+            }
+        }
     }
 
     /**
@@ -194,18 +223,5 @@ public class SpaceGameView extends SurfaceView implements Runnable {
 
     public Spaceship getSpaceship() {
         return spaceship;
-    }
-
-    public void registerBullet(Bullet bullet) {
-        bullets.add(bullet);
-    }
-
-    public void removeBullet(int id) {
-        for (Bullet bullet : bullets) {
-            if (bullet.getId() == id) {
-                expiredBullets.add(bullet);
-                break;
-            }
-        }
     }
 }

@@ -77,14 +77,7 @@ public class Spaceship extends Drawable {
      * @param framesPerSecond
      */
     public void update(long framesPerSecond) {
-        Bullet bullet = null;
-
-        long now = System.currentTimeMillis();
-        if (now - lastBulletTime > 500 && direction != Direction.NONE) {
-            bullet = new Bullet(view);
-            view.registerBullet(bullet);
-            lastBulletTime = now;
-        }
+        Bullet bullet = createBullet();
 
         long movement = movementSpeed / framesPerSecond;
 
@@ -136,5 +129,17 @@ public class Spaceship extends Drawable {
 
     public void setDirection(Direction direction) {
         this.direction = direction;
+    }
+
+    public Bullet createBullet() {
+        long now = System.currentTimeMillis();
+
+        if (now - lastBulletTime > 500 && direction != Direction.NONE) {
+            Bullet bullet = new Bullet(view);
+            view.registerBullet(bullet);
+            lastBulletTime = now;
+            return bullet;
+        }
+        return null;
     }
 }
