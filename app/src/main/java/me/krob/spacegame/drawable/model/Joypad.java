@@ -1,4 +1,4 @@
-package me.krob.spacegame;
+package me.krob.spacegame.drawable.model;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,6 +6,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.MotionEvent;
+
+import me.krob.spacegame.util.Direction;
+import me.krob.spacegame.R;
+import me.krob.spacegame.view.SpaceGameView;
+import me.krob.spacegame.drawable.Drawable;
 
 public class Joypad extends Drawable {
     private final SpaceGameView view;

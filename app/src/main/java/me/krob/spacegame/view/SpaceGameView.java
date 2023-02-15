@@ -1,4 +1,4 @@
-package me.krob.spacegame;
+package me.krob.spacegame.view;
 
 
 import android.content.Context;
@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.Space;
+
+import me.krob.spacegame.drawable.model.Joypad;
+import me.krob.spacegame.drawable.model.Spaceship;
 
 public class SpaceGameView extends SurfaceView implements Runnable{
     private static final String TOP_TEXT = "Score: %s Lives: %s FPS: %s";

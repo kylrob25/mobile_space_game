@@ -1,9 +1,11 @@
-package me.krob.spacegame;
+package me.krob.spacegame.drawable;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+
+import me.krob.spacegame.drawable.IDrawable;
 
 public abstract class Drawable implements IDrawable {
     protected final RectF rect;

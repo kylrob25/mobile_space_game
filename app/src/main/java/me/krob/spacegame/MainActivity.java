@@ -6,6 +6,8 @@ import android.view.Display;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import me.krob.spacegame.view.SpaceGameView;
+
 public class MainActivity extends AppCompatActivity {
     private SpaceGameView spaceGameView;
 

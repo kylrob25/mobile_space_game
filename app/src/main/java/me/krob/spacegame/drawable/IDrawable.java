@@ -1,4 +1,4 @@
-package me.krob.spacegame;
+package me.krob.spacegame.drawable;
 
 import android.content.Context;
 import android.graphics.Canvas;

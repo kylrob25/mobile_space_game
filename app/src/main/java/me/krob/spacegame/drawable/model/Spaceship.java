@@ -1,4 +1,4 @@
-package me.krob.spacegame;
+package me.krob.spacegame.drawable.model;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,6 +6,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+
+import me.krob.spacegame.util.Direction;
+import me.krob.spacegame.R;
+import me.krob.spacegame.view.SpaceGameView;
+import me.krob.spacegame.drawable.Drawable;
 
 public class Spaceship extends Drawable {
     private static final int MOVEMENT_SPEED = 350;
@@ -63,10 +68,10 @@ public class Spaceship extends Drawable {
 
     /**
      * Updating the location
-     * @param fps
+     * @param framesPerSecond
      */
-    public void update(long fps) {
-        long movement = movementSpeed / fps;
+    public void update(long framesPerSecond) {
+        long movement = movementSpeed / framesPerSecond;
 
         switch (direction) {
             case LEFT:
