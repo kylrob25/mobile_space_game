@@ -41,6 +41,10 @@ public class Joypad extends Drawable {
         paint.setAlpha(100);
     }
 
+    public void handleCollisions() {
+        // Do nothing
+    }
+
     public void update(long framesPerSecond) {
         // Do nothing
     }
@@ -63,20 +67,16 @@ public class Joypad extends Drawable {
                         if (x > (minX+diffX) && x < (maxX-diffX)) {
                             if (y < minY+diffX) {
                                 spaceship.setDirection(Direction.UP);
-                                spaceship.shoot();
                             } else if (y > minY+(diffX*2) && y < minY+(diffX*3)) {
                                 spaceship.setDirection(Direction.DOWN);
-                                spaceship.shoot();
                             }
                         }
 
                         if (x < minX + (diffX*3) && y > minY+diffX && y < minY+(diffX*2)) {
                             if (x < minX+diffX) {
                                 spaceship.setDirection(Direction.LEFT);
-                                spaceship.shoot();
                             } else if (x > minX+(diffX*2)) {
                                 spaceship.setDirection(Direction.RIGHT);
-                                spaceship.shoot();
                             }
                         }
                     }

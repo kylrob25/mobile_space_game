@@ -65,9 +65,11 @@ public class SpaceGameView extends SurfaceView implements Runnable{
      */
     private void update() {
         spaceship.update(framesPerSecond);
+        spaceship.handleCollisions();
 
         if (bullet.isActive()) {
             bullet.update(framesPerSecond);
+            bullet.handleCollisions();
         }
     }
 

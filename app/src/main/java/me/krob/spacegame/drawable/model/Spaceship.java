@@ -35,23 +35,8 @@ public class Spaceship extends Drawable {
         createBitmap(context);
     }
 
-    public void shoot() {
-        Bullet bullet = view.getBullet();
-
-        switch (direction) {
-            case UP:
-                bullet.shoot(locX + width / 2f, locY, direction);
-                break;
-            case DOWN:
-                bullet.shoot(locX + width / 2f, locY + height, direction);
-                break;
-            case RIGHT:
-                bullet.shoot(locX + width, locY + height / 2f, direction);
-                break;
-            case LEFT:
-                bullet.shoot(locX, locY + height / 2f, direction);
-                break;
-        }
+    public void handleCollisions() {
+        // TODO:
     }
 
     /**
@@ -90,12 +75,15 @@ public class Spaceship extends Drawable {
      * @param framesPerSecond
      */
     public void update(long framesPerSecond) {
+        Bullet bullet = view.getBullet();
         long movement = movementSpeed / framesPerSecond;
 
         switch (direction) {
             case LEFT:
                 locX -= movement;
                 setBitmap(bitmapLeft);
+
+                bullet.shoot(locX, locY + height / 2f, direction);
 
                 if (locX <= 0) {
                     locX = view.getScreenX() - width;
@@ -105,13 +93,18 @@ public class Spaceship extends Drawable {
                 locX += movement;
                 setBitmap(bitmapRight);
 
+                bullet.shoot(locX + width, locY + height / 2f, direction);
+
                 if ((locX - width) >= view.getScreenX() - 500) {
                     locX = 0;
                 }
                 break;
             case UP:
                 locY -= movement;
+
                 setBitmap(bitmapUp);
+
+                bullet.shoot(locX + width / 2f, locY, direction);
 
                 if (locY + height <= 0) {
                     locY = view.getScreenY();
@@ -119,7 +112,10 @@ public class Spaceship extends Drawable {
                 break;
             case DOWN:
                 locY += movement;
+
                 setBitmap(bitmapDown);
+
+                bullet.shoot(locX + width / 2f, locY + height, direction);
 
                 if (locY >= view.getScreenY()) {
                     locY = 0 - height;

@@ -23,6 +23,8 @@ public abstract class Drawable implements IDrawable {
 
     public abstract void update(long framesPerSecond);
 
+    public abstract void handleCollisions();
+
     /**
      * Updating the rect
      */

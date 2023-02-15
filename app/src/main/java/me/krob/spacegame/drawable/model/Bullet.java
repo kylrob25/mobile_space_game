@@ -9,7 +9,7 @@ import me.krob.spacegame.view.SpaceGameView;
 import me.krob.spacegame.drawable.Drawable;
 
 public class Bullet extends Drawable {
-    private static final int MOVEMENT_SPEED = 650;
+    private static final int MOVEMENT_SPEED = 1650;
 
     private final SpaceGameView view;
 
@@ -22,6 +22,16 @@ public class Bullet extends Drawable {
         this.view = view;
 
         createBitmap(context);
+    }
+
+    public void handleCollisions() {
+        // TODO: Check for opponents
+        if (getImpactY() < 0 ||
+                getImpactY() > view.getScreenY() ||
+                getImpactX() < 0 ||
+                getImpactX() > view.getScreenX()) {
+            active = false;
+        }
     }
 
     public boolean shoot(float startX, float startY, Direction direction) {
@@ -44,15 +54,15 @@ public class Bullet extends Drawable {
 
         if (direction.isHorizontal()) {
             width = view.getScreenX() / 20f;
-            height = 1f;
+            height = 2f;
         } else {
             height = view.getScreenY() / 20f;
-            width = 1f;
+            width = 2f;
         }
     }
 
     public void createBitmap(Context context) {
-
+        // TODO: Switch to an image rather than drawing the rect
     }
 
     public void draw(Canvas canvas, Paint paint) {
