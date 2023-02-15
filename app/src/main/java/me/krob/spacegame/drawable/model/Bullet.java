@@ -11,17 +11,20 @@ import me.krob.spacegame.drawable.Drawable;
 public class Bullet extends Drawable {
     private static final int MOVEMENT_SPEED = 1650;
 
+    private static int BULLETS = 1;
+    private final int id = BULLETS++;
+
     private final SpaceGameView view;
 
     private Direction direction = Direction.NONE;
     private boolean active;
     private int movementSpeed = MOVEMENT_SPEED;
 
-    public Bullet(SpaceGameView view, Context context) {
+    public Bullet(SpaceGameView view) {
         super(0f, 0f);
         this.view = view;
 
-        createBitmap(context);
+        createBitmap(view.getContext());
     }
 
     public void handleCollisions() {
@@ -31,6 +34,7 @@ public class Bullet extends Drawable {
                 getImpactX() < 0 ||
                 getImpactX() > view.getScreenX()) {
             active = false;
+            view.removeBullet(id);
         }
     }
 
@@ -52,11 +56,13 @@ public class Bullet extends Drawable {
     private void updateDirection(Direction direction) {
         this.direction = direction;
 
+        float size = view.getScreenY() / 20f;
+
         if (direction.isHorizontal()) {
-            width = view.getScreenX() / 20f;
+            width = size;
             height = 2f;
         } else {
-            height = view.getScreenY() / 20f;
+            height = size;
             width = 2f;
         }
     }
@@ -103,5 +109,9 @@ public class Bullet extends Drawable {
 
     public boolean isActive() {
         return active;
+    }
+
+    public int getId() {
+        return id;
     }
 }

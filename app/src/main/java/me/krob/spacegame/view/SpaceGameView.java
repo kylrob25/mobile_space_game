@@ -10,12 +10,15 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.krob.spacegame.drawable.model.Bullet;
 import me.krob.spacegame.drawable.model.Joypad;
 import me.krob.spacegame.drawable.model.Spaceship;
 
-public class SpaceGameView extends SurfaceView implements Runnable{
-    private static final String TOP_TEXT = "Score: %s Lives: %s FPS: %s";
+public class SpaceGameView extends SurfaceView implements Runnable {
+    private static final String TOP_TEXT = "Score: %s Lives: %s FPS: %s Bullets: %s";
     private static final int LIVES = 4;
     private static final int SCORE = 10;
 
@@ -26,17 +29,20 @@ public class SpaceGameView extends SurfaceView implements Runnable{
     private final int screenX;
     private final int screenY;
 
+    private Thread thread = null;
+
     private Spaceship spaceship;
     private Joypad joypad;
-    private Bullet bullet; // TODO: Array for multiple bullets
 
-    private Thread thread = null;
+    private List<Bullet> bullets = new ArrayList<>();
+    private List<Bullet> expiredBullets = new ArrayList<>();
+
     private volatile boolean playing;
     private boolean paused = true;
 
     public int score = SCORE, lives = LIVES;
 
-    private long framesPerSecond;
+    private long framesPerSecond, lastFrameTime;
 
     public SpaceGameView(Context context, int x, int y) {
         super(context);
@@ -57,7 +63,6 @@ public class SpaceGameView extends SurfaceView implements Runnable{
     private void initLevel(){
         spaceship = new Spaceship(this, context);
         joypad = new Joypad(this, context);
-        bullet = new Bullet(this, context);
     }
 
     /**
@@ -67,10 +72,18 @@ public class SpaceGameView extends SurfaceView implements Runnable{
         spaceship.update(framesPerSecond);
         spaceship.handleCollisions();
 
-        if (bullet.isActive()) {
-            bullet.update(framesPerSecond);
-            bullet.handleCollisions();
-        }
+        bullets.forEach(bullet -> {
+            if (bullet.isActive()) {
+                bullet.update(framesPerSecond);
+                bullet.handleCollisions();
+            }
+        });
+
+        // Make sure there aren't any memory leaks
+        expiredBullets.removeIf(bullet -> {
+            bullets.remove(bullet);
+            return true;
+        });
     }
 
     /**
@@ -85,9 +98,11 @@ public class SpaceGameView extends SurfaceView implements Runnable{
             spaceship.draw(canvas, paint);
             joypad.draw(canvas, paint);
 
-            if (bullet.isActive()) {
-                bullet.draw(canvas, paint);
-            }
+            bullets.forEach(bullet -> {
+                if (bullet.isActive()) {
+                    bullet.draw(canvas, paint);
+                }
+            });
 
             drawText(canvas);
 
@@ -108,7 +123,7 @@ public class SpaceGameView extends SurfaceView implements Runnable{
     private void drawText(Canvas canvas) {
         paint.setColor(Color.argb(255,  249, 129, 0)); // Set the colour
         paint.setTextSize(50); // Set the text size
-        canvas.drawText(String.format(TOP_TEXT, score, lives, framesPerSecond), 10,50, paint); // Draw the text
+        canvas.drawText(String.format(TOP_TEXT, score, lives, framesPerSecond, bullets.size()), 10,50, paint); // Draw the text
     }
 
     /**
@@ -126,7 +141,7 @@ public class SpaceGameView extends SurfaceView implements Runnable{
             draw();
 
             // Calculating the frame times
-            long lastFrameTime = System.currentTimeMillis() - startTime;
+            lastFrameTime = System.currentTimeMillis() - startTime;
             if (lastFrameTime >= 1) {
                 framesPerSecond = 1000 / lastFrameTime;
             }
@@ -140,8 +155,8 @@ public class SpaceGameView extends SurfaceView implements Runnable{
         playing = false;
         try {
             thread.join();
-        } catch (InterruptedException e) {
-            Log.e("[Error]", "Failed to join thread.");
+        } catch (Throwable throwable) {
+            Log.e("[Error]", "Failed to shutdown thread.");
         }
     }
 
@@ -181,7 +196,16 @@ public class SpaceGameView extends SurfaceView implements Runnable{
         return spaceship;
     }
 
-    public Bullet getBullet() {
-        return bullet;
+    public void registerBullet(Bullet bullet) {
+        bullets.add(bullet);
+    }
+
+    public void removeBullet(int id) {
+        for (Bullet bullet : bullets) {
+            if (bullet.getId() == id) {
+                expiredBullets.add(bullet);
+                break;
+            }
+        }
     }
 }
