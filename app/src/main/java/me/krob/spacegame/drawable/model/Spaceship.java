@@ -35,25 +35,44 @@ public class Spaceship extends Drawable {
         createBitmap(context);
     }
 
+    public void shoot() {
+        Bullet bullet = view.getBullet();
+
+        switch (direction) {
+            case UP:
+                bullet.shoot(locX + width / 2f, locY, direction);
+                break;
+            case DOWN:
+                bullet.shoot(locX + width / 2f, locY + height, direction);
+                break;
+            case RIGHT:
+                bullet.shoot(locX + width, locY + height / 2f, direction);
+                break;
+            case LEFT:
+                bullet.shoot(locX, locY + height / 2f, direction);
+                break;
+        }
+    }
+
     /**
      * Creating our bitmap images
      * @param context
      */
     public void createBitmap(Context context) {
         Bitmap decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipup);
-        bitmap = Bitmap.createScaledBitmap(decoded, (int) length, (int) height, false);
+        bitmap = Bitmap.createScaledBitmap(decoded, (int) width, (int) height, false);
 
         decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipup);
-        bitmapUp = Bitmap.createScaledBitmap(decoded, (int) (length), (int) (height),false);
+        bitmapUp = Bitmap.createScaledBitmap(decoded, (int) (width), (int) (height),false);
 
         decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipright);
-        bitmapRight = Bitmap.createScaledBitmap(decoded, (int) (length), (int) (height),false);
+        bitmapRight = Bitmap.createScaledBitmap(decoded, (int) (width), (int) (height),false);
 
         decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipleft);
-        bitmapLeft = Bitmap.createScaledBitmap(decoded, (int) (length), (int) (height),false);
+        bitmapLeft = Bitmap.createScaledBitmap(decoded, (int) (width), (int) (height),false);
 
         decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipdown);
-        bitmapDown = Bitmap.createScaledBitmap(decoded, (int) (length), (int) (height),false);
+        bitmapDown = Bitmap.createScaledBitmap(decoded, (int) (width), (int) (height),false);
     }
 
     /**
@@ -79,14 +98,14 @@ public class Spaceship extends Drawable {
                 setBitmap(bitmapLeft);
 
                 if (locX <= 0) {
-                    locX = view.getScreenX() - length;
+                    locX = view.getScreenX() - width;
                 }
                 break;
             case RIGHT:
                 locX += movement;
                 setBitmap(bitmapRight);
 
-                if ((locX - length) >= view.getScreenX() - 500) {
+                if ((locX - width) >= view.getScreenX() - 500) {
                     locX = 0;
                 }
                 break;

@@ -5,18 +5,16 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
-import me.krob.spacegame.drawable.IDrawable;
-
 public abstract class Drawable implements IDrawable {
     protected final RectF rect;
     protected float locX, locY;
-    protected final float height, length;
+    protected float height, width;
 
     protected Bitmap bitmap;
 
-    public Drawable(float height, float length) {
+    public Drawable(float height, float width) {
         this.height = height;
-        this.length = length;
+        this.width = width;
 
         rect = new RectF();
     }
@@ -29,7 +27,7 @@ public abstract class Drawable implements IDrawable {
      * Updating the rect
      */
     protected void updateRect() {
-        rect.set(locX - length, locY, locX + length, locY + height);
+        rect.set(locX - width, locY, locX + width, locY + height);
     }
 
     /**
@@ -44,8 +42,8 @@ public abstract class Drawable implements IDrawable {
         return height;
     }
 
-    protected float getLength() {
-        return length;
+    protected float getWidth() {
+        return width;
     }
 
     protected float getLocX() {

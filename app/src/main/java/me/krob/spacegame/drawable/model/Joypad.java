@@ -58,19 +58,25 @@ public class Joypad extends Drawable {
                     if (y > minY && y < maxY) {
                         float diffX = (maxX - minX) / 3f;
 
+                        Spaceship spaceship = view.getSpaceship();
+
                         if (x > (minX+diffX) && x < (maxX-diffX)) {
                             if (y < minY+diffX) {
-                                view.getSpaceship().setDirection(Direction.UP);
+                                spaceship.setDirection(Direction.UP);
+                                spaceship.shoot();
                             } else if (y > minY+(diffX*2) && y < minY+(diffX*3)) {
-                                view.getSpaceship().setDirection(Direction.DOWN);
+                                spaceship.setDirection(Direction.DOWN);
+                                spaceship.shoot();
                             }
                         }
 
                         if (x < minX + (diffX*3) && y > minY+diffX && y < minY+(diffX*2)) {
                             if (x < minX+diffX) {
-                                view.getSpaceship().setDirection(Direction.LEFT);
+                                spaceship.setDirection(Direction.LEFT);
+                                spaceship.shoot();
                             } else if (x > minX+(diffX*2)) {
-                                view.getSpaceship().setDirection(Direction.RIGHT);
+                                spaceship.setDirection(Direction.RIGHT);
+                                spaceship.shoot();
                             }
                         }
                     }

@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import me.krob.spacegame.drawable.model.Bullet;
 import me.krob.spacegame.drawable.model.Joypad;
 import me.krob.spacegame.drawable.model.Spaceship;
 
@@ -27,6 +28,7 @@ public class SpaceGameView extends SurfaceView implements Runnable{
 
     private Spaceship spaceship;
     private Joypad joypad;
+    private Bullet bullet; // TODO: Array for multiple bullets
 
     private Thread thread = null;
     private volatile boolean playing;
@@ -55,6 +57,7 @@ public class SpaceGameView extends SurfaceView implements Runnable{
     private void initLevel(){
         spaceship = new Spaceship(this, context);
         joypad = new Joypad(this, context);
+        bullet = new Bullet(this, context);
     }
 
     /**
@@ -62,6 +65,10 @@ public class SpaceGameView extends SurfaceView implements Runnable{
      */
     private void update() {
         spaceship.update(framesPerSecond);
+
+        if (bullet.isActive()) {
+            bullet.update(framesPerSecond);
+        }
     }
 
     /**
@@ -75,6 +82,10 @@ public class SpaceGameView extends SurfaceView implements Runnable{
 
             spaceship.draw(canvas, paint);
             joypad.draw(canvas, paint);
+
+            if (bullet.isActive()) {
+                bullet.draw(canvas, paint);
+            }
 
             drawText(canvas);
 
@@ -166,5 +177,9 @@ public class SpaceGameView extends SurfaceView implements Runnable{
 
     public Spaceship getSpaceship() {
         return spaceship;
+    }
+
+    public Bullet getBullet() {
+        return bullet;
     }
 }
