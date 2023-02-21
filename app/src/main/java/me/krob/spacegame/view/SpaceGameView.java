@@ -18,7 +18,7 @@ import me.krob.spacegame.drawable.model.Joypad;
 import me.krob.spacegame.drawable.model.Spaceship;
 
 public class SpaceGameView extends SurfaceView implements Runnable {
-    private static final String TOP_TEXT = "Score: %s Lives: %s FPS: %s Bullets: %s";
+    private static final String TOP_TEXT = "Score: %s Lives: %s FPS: %s Frames: %s";
     private static final int LIVES = 4;
     private static final int SCORE = 10;
 
@@ -43,6 +43,7 @@ public class SpaceGameView extends SurfaceView implements Runnable {
     public int score = SCORE, lives = LIVES;
 
     private long framesPerSecond;
+    private int totalFrames;
 
     public SpaceGameView(Context context, int x, int y) {
         super(context);
@@ -75,6 +76,11 @@ public class SpaceGameView extends SurfaceView implements Runnable {
             long lastFrameTime = System.currentTimeMillis() - startTime;
             if (lastFrameTime >= 1) {
                 framesPerSecond = 1000 / lastFrameTime;
+
+                // Increasing score based on time
+                if (totalFrames++ % 500 == 0) {
+                    score += 5;
+                }
             }
         }
     }
@@ -145,7 +151,7 @@ public class SpaceGameView extends SurfaceView implements Runnable {
     private void drawText(Canvas canvas) {
         paint.setColor(Color.argb(255,  249, 129, 0)); // Set the colour
         paint.setTextSize(50); // Set the text size
-        canvas.drawText(String.format(TOP_TEXT, score, lives, framesPerSecond, bullets.size()), 10,50, paint); // Draw the text
+        canvas.drawText(String.format(TOP_TEXT, score, lives, framesPerSecond, totalFrames), 10,50, paint); // Draw the text
     }
 
     /**

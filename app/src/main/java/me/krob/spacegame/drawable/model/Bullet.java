@@ -9,7 +9,7 @@ import me.krob.spacegame.view.SpaceGameView;
 import me.krob.spacegame.drawable.Drawable;
 
 public class Bullet extends Drawable {
-    private static final int MOVEMENT_SPEED = 650;
+    private static final int MOVEMENT_SPEED = 1650;
 
     private static int BULLETS = 1;
     private final int id = BULLETS++;
