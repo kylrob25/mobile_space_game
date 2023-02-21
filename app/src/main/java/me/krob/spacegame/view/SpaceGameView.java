@@ -79,7 +79,11 @@ public class SpaceGameView extends SurfaceView implements Runnable {
 
                 // Increasing score based on time
                 if (totalFrames++ % 500 == 0) {
-                    score += 5;
+
+                    // Increasing lives every 20 score points
+                    if ((score += 5) % 20 == 0) {
+                        incrementLives(1);
+                    };
                 }
             }
         }
@@ -174,6 +178,22 @@ public class SpaceGameView extends SurfaceView implements Runnable {
         thread = new Thread(this);
         thread.start();
         Log.i("[Info]", "Started thread.");
+    }
+
+    public void incrementScore(int value) {
+        score += value;
+    }
+
+    public void decrementScore(int value) {
+        score -= value;
+    }
+
+    public void incrementLives(int value) {
+        lives += value;
+    }
+
+    public void decrementLives(int value) {
+        lives -= value;
     }
 
     /**

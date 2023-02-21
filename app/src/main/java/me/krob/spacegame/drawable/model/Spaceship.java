@@ -42,6 +42,14 @@ public class Spaceship extends Drawable {
     }
 
     /**
+     * Modify score/lives when damage is taken
+     */
+    public void takeDamage() {
+        view.decrementLives(1);
+        view.decrementScore(5);
+    }
+
+    /**
      * Creating our bitmap images
      * @param context
      */
