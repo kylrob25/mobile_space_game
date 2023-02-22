@@ -10,17 +10,11 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import me.krob.spacegame.drawable.model.Bullet;
-import me.krob.spacegame.drawable.model.Joypad;
-import me.krob.spacegame.drawable.model.Spaceship;
+import me.krob.spacegame.handler.GameObjectHandler;
+import me.krob.spacegame.handler.ScoreHandler;
 
 public class SpaceGameView extends SurfaceView implements Runnable {
-    private static final String TOP_TEXT = "Score: %s Lives: %s FPS: %s Frames: %s";
-    private static final int LIVES = 4;
-    private static final int SCORE = 10;
+    private static final String TOP_TEXT = "Score: %s Lives: %s FPS: %s";
 
     private final Context context;
     private final SurfaceHolder holder;
@@ -29,33 +23,27 @@ public class SpaceGameView extends SurfaceView implements Runnable {
     private final int screenX;
     private final int screenY;
 
+    private final ScoreHandler scoreHandler;
+    private final GameObjectHandler objectHandler;
+
     private Thread thread = null;
-
-    private Spaceship spaceship;
-    private Joypad joypad;
-
-    private List<Bullet> bullets = new ArrayList<>();
-    private List<Bullet> expiredBullets = new ArrayList<>();
-
     private volatile boolean playing;
     private boolean paused = true;
 
-    public int score = SCORE, lives = LIVES;
-
     private long framesPerSecond;
-    private int totalFrames;
 
-    public SpaceGameView(Context context, int x, int y) {
-        super(context);
-        this.context = context;
+    public SpaceGameView(Context ctx, int x, int y) {
+        super(ctx);
 
+        context = ctx;
         holder = getHolder();
         paint = new Paint();
 
         screenX = x;
         screenY = y;
 
-        initLevel();
+        scoreHandler = new ScoreHandler();
+        objectHandler = new GameObjectHandler(this);
     }
 
     /**
@@ -76,46 +64,17 @@ public class SpaceGameView extends SurfaceView implements Runnable {
             long lastFrameTime = System.currentTimeMillis() - startTime;
             if (lastFrameTime >= 1) {
                 framesPerSecond = 1000 / lastFrameTime;
-
-                // Increasing score based on time
-                if (totalFrames++ % 500 == 0) {
-
-                    // Increasing lives every 20 score points
-                    if ((score += 5) % 20 == 0) {
-                        incrementLives(1);
-                    };
-                }
             }
         }
     }
 
     /**
-     * Initiating the spaceship
-     */
-    private void initLevel(){
-        spaceship = new Spaceship(this, context);
-        joypad = new Joypad(this, context);
-    }
-
-    /**
-     * Updating the spaceship
+     * Updating the object handler
      */
     private void update() {
-        spaceship.update(framesPerSecond);
-        spaceship.handleCollisions();
-
-        bullets.forEach(bullet -> {
-            if (bullet.isActive()) {
-                bullet.update(framesPerSecond);
-                bullet.handleCollisions();
-            }
-        });
-
-        // Make sure there aren't any memory leaks
-        expiredBullets.removeIf(bullet -> {
-            bullets.remove(bullet);
-            return true;
-        });
+        if (framesPerSecond > 0) {
+            objectHandler.update(framesPerSecond);
+        }
     }
 
     /**
@@ -127,14 +86,7 @@ public class SpaceGameView extends SurfaceView implements Runnable {
 
             drawBackground(canvas);
 
-            spaceship.draw(canvas, paint);
-            joypad.draw(canvas, paint);
-
-            bullets.forEach(bullet -> {
-                if (bullet.isActive()) {
-                    bullet.draw(canvas, paint);
-                }
-            });
+            objectHandler.draw(canvas, paint);
 
             drawText(canvas);
 
@@ -155,7 +107,7 @@ public class SpaceGameView extends SurfaceView implements Runnable {
     private void drawText(Canvas canvas) {
         paint.setColor(Color.argb(255,  249, 129, 0)); // Set the colour
         paint.setTextSize(50); // Set the text size
-        canvas.drawText(String.format(TOP_TEXT, score, lives, framesPerSecond, totalFrames), 10,50, paint); // Draw the text
+        canvas.drawText(String.format(TOP_TEXT, scoreHandler.getScore(), scoreHandler.getLives(), framesPerSecond), 10,50, paint); // Draw the text
     }
 
     /**
@@ -180,63 +132,22 @@ public class SpaceGameView extends SurfaceView implements Runnable {
         Log.i("[Info]", "Started thread.");
     }
 
-    public void incrementScore(int value) {
-        score += value;
-    }
-
-    public void decrementScore(int value) {
-        score -= value;
-    }
-
-    public void incrementLives(int value) {
-        lives += value;
-    }
-
-    public void decrementLives(int value) {
-        lives -= value;
-    }
-
-    /**
-     * Register a bullet
-     * @param bullet - the bullet
-     */
-    public void registerBullet(Bullet bullet) {
-        bullets.add(bullet);
-    }
-
-    /**
-     * Remove a bullet
-     * @param bullet - the bullet
-     */
-    public void removeBullet(Bullet bullet) {
-        expiredBullets.add(bullet);
-    }
-
-    /**
-     * Remove a bullet
-     * @param id - the bullet id
-     */
-    public void removeBullet(int id) {
-        for (Bullet bullet : bullets) {
-            if (bullet.getId() == id) {
-                expiredBullets.add(bullet);
-                break;
-            }
-        }
-    }
-
     /**
      * Handling the user touch event
      * @param event - the motion event
      * @return - true
      */
     public boolean onTouchEvent(MotionEvent event) {
-        joypad.handleMovement(event);
+        objectHandler.onTouchEvent(event);
         return true;
     }
 
     public void setPaused(boolean paused) {
         this.paused = paused;
+    }
+
+    public GameObjectHandler getObjectHandler() {
+        return objectHandler;
     }
 
     public float getScreenX() {
@@ -245,9 +156,5 @@ public class SpaceGameView extends SurfaceView implements Runnable {
 
     public float getScreenY() {
         return screenY;
-    }
-
-    public Spaceship getSpaceship() {
-        return spaceship;
     }
 }

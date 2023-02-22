@@ -1,8 +1,6 @@
 package me.krob.spacegame.drawable;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.RectF;
 
 public abstract class Drawable implements IDrawable {
@@ -19,11 +17,13 @@ public abstract class Drawable implements IDrawable {
         rect = new RectF();
     }
 
-    public abstract void draw(Canvas canvas, Paint paint);
+    protected boolean intersects(IDrawable drawable) {
+        return rect.intersect(drawable.getRect());
+    }
 
-    public abstract void update(long framesPerSecond);
-
-    public abstract void handleCollisions();
+    protected void updateRect(float minX, float minY, float maxX, float maxY) {
+        rect.set(minX, minY, maxX, maxY);
+    }
 
     /**
      * Updating the rect
@@ -54,5 +54,9 @@ public abstract class Drawable implements IDrawable {
 
     protected float getLocY() {
         return locY;
+    }
+
+    public RectF getRect() {
+        return rect;
     }
 }

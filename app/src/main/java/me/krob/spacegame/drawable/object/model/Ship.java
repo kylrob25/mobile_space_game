@@ -1,4 +1,4 @@
-package me.krob.spacegame.drawable.model;
+package me.krob.spacegame.drawable.object.model;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,12 +7,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import me.krob.spacegame.handler.GameObjectHandler;
 import me.krob.spacegame.util.Direction;
 import me.krob.spacegame.R;
 import me.krob.spacegame.view.SpaceGameView;
-import me.krob.spacegame.drawable.Drawable;
+import me.krob.spacegame.drawable.object.GameObject;
 
-public class Spaceship extends Drawable {
+public class Ship extends GameObject {
     private static final int MOVEMENT_SPEED = 350;
 
     private final SpaceGameView view;
@@ -27,26 +28,14 @@ public class Spaceship extends Drawable {
 
     private long lastBulletTime;
 
-    public Spaceship(SpaceGameView view, Context context){
+    public Ship(SpaceGameView view){
         super(view.getScreenY() / 10f, view.getScreenY() / 10f);
         this.view = view;
 
         locX = view.getScreenX() / 2f;
         locY = view.getScreenY() / 2f;
 
-        createBitmap(context);
-    }
-
-    public void handleCollisions() {
-        // TODO:
-    }
-
-    /**
-     * Modify score/lives when damage is taken
-     */
-    public void takeDamage() {
-        view.decrementLives(1);
-        view.decrementScore(5);
+        createBitmap(view.getContext());
     }
 
     /**
@@ -80,11 +69,22 @@ public class Spaceship extends Drawable {
         canvas.drawBitmap(bitmap, locX, locY , paint);
     }
 
+    public void handleCollisions() {
+        GameObjectHandler objectHandler = view.getObjectHandler();
+
+        if (intersects(objectHandler.getJoypad())) {
+            locX = view.getScreenX() / 2f;
+            locY = view.getScreenY() / 2f;
+        }
+    }
+
     /**
      * Updating the location
      * @param framesPerSecond
      */
     public void update(long framesPerSecond) {
+        handleCollisions();
+
         Bullet bullet = createBullet();
 
         long movement = movementSpeed / framesPerSecond;
@@ -144,7 +144,7 @@ public class Spaceship extends Drawable {
 
         if (now - lastBulletTime > 500 && direction != Direction.NONE) {
             Bullet bullet = new Bullet(view);
-            view.registerBullet(bullet);
+            view.getObjectHandler().addBullet(bullet);
             lastBulletTime = now;
             return bullet;
         }

@@ -1,4 +1,4 @@
-package me.krob.spacegame.drawable.model;
+package me.krob.spacegame.drawable.object.model;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,9 +6,9 @@ import android.graphics.Paint;
 
 import me.krob.spacegame.util.Direction;
 import me.krob.spacegame.view.SpaceGameView;
-import me.krob.spacegame.drawable.Drawable;
+import me.krob.spacegame.drawable.object.GameObject;
 
-public class Bullet extends Drawable {
+public class Bullet extends GameObject {
     private static final int MOVEMENT_SPEED = 1650;
 
     private static int BULLETS = 1;
@@ -34,14 +34,13 @@ public class Bullet extends Drawable {
                 getImpactX() < 0 ||
                 getImpactX() > view.getScreenX()) {
             active = false;
-            view.removeBullet(this);
-            //view.removeBullet(id);
+            view.getObjectHandler().removeBullet(this);
         }
     }
 
-    public boolean shoot(float startX, float startY, Direction direction) {
+    public void shoot(float startX, float startY, Direction direction) {
         if (active) {
-            return false;
+            return;
         }
 
         locX = startX;
@@ -50,8 +49,6 @@ public class Bullet extends Drawable {
         active = true;
 
         updateDirection(direction);
-
-        return true;
     }
 
     private void updateDirection(Direction direction) {
@@ -77,6 +74,8 @@ public class Bullet extends Drawable {
     }
 
     public void update(long framesPerSecond) {
+        handleCollisions();
+
         long movement = movementSpeed / framesPerSecond;
 
         switch (direction) {
