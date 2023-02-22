@@ -13,7 +13,6 @@ import me.krob.spacegame.drawable.object.model.Ship;
 import me.krob.spacegame.view.SpaceGameView;
 
 public class GameObjectHandler {
-
     private final Ship ship;
     private final Joypad joypad;
 

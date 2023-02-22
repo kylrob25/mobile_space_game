@@ -132,6 +132,10 @@ public class SpaceGameView extends SurfaceView implements Runnable {
         Log.i("[Info]", "Started thread.");
     }
 
+    public void setPaused(boolean paused) {
+        this.paused = paused;
+    }
+
     /**
      * Handling the user touch event
      * @param event - the motion event
@@ -140,10 +144,6 @@ public class SpaceGameView extends SurfaceView implements Runnable {
     public boolean onTouchEvent(MotionEvent event) {
         objectHandler.onTouchEvent(event);
         return true;
-    }
-
-    public void setPaused(boolean paused) {
-        this.paused = paused;
     }
 
     public GameObjectHandler getObjectHandler() {

@@ -75,8 +75,7 @@ public class Ship extends GameObject {
         GameObjectHandler objectHandler = view.getObjectHandler();
 
         if (intersects(objectHandler.getJoypad())) {
-            locX = view.getScreenX() / 2f;
-            locY = view.getScreenY() / 2f;
+            teleportToCenter();
         }
     }
 
@@ -146,6 +145,11 @@ public class Ship extends GameObject {
 
             lastBulletTime = now;
         }
+    }
+
+    private void teleportToCenter() {
+        locX = view.getScreenX() / 2f;
+        locY = view.getScreenY() / 2f;
     }
 
     public void setDirection(Direction direction) {
