@@ -20,7 +20,7 @@ public class Joypad extends Drawable {
     private final RectF up, down, left, right;
 
     public Joypad(SpaceGameView view) {
-        super(view.getScreenX() / 4.5f, view.getScreenX() / 4.5f);
+        super(view.getScreenX() / 5f, view.getScreenX() / 5f);
         this.view = view;
 
         minX = view.getScreenX() - (getHeight() + (view.getScreenX() * 0.025f));

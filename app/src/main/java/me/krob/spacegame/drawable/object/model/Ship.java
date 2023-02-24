@@ -105,7 +105,7 @@ public class Ship extends GameObject {
 
                 shoot(locX + width, locY + height / 2f, direction);
 
-                if ((locX - width) >= view.getScreenX() - 500) {
+                if ((locX + width) >= view.getScreenX()) {
                     locX = 0;
                 }
                 break;
