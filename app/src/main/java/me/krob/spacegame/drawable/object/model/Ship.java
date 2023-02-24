@@ -33,7 +33,7 @@ public class Ship extends GameObject {
     private long lastBulletTime;
 
     public Ship(SpaceGameView view){
-        super(view.getScreenY() / 10f, view.getScreenY() / 10f);
+        super(view.getScreenY() / 12f, view.getScreenY() / 12f);
         this.view = view;
 
         locX = view.getScreenX() / 2f;
