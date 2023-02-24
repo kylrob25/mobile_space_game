@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import me.krob.spacegame.drawable.Drawable;
@@ -58,7 +59,7 @@ public class Joypad extends Drawable {
 
     public void onTouchEvent(MotionEvent event) {
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_DOWN: {
                 view.setPaused(false);
 
                 float x = event.getX();
@@ -78,10 +79,33 @@ public class Joypad extends Drawable {
                 }
 
                 break;
+            }
+            case MotionEvent.ACTION_MOVE: {
+                float x = event.getX();
+                float y = event.getY();
+
+                if (rect.contains(x, y)) {
+                    float diffX = x - rect.centerX();
+                    float diffY = y - rect.centerY();
+
+                    if (diffY == 0 && diffX == 0) {
+                        return;
+                    }
+
+                    Ship ship = view.getObjectHandler().getShip();
+                    float angle = getAngle(diffX, diffY);
+                    ship.setDirection(Direction.fromAngle(angle));
+                }
+                break;
+            }
             case MotionEvent.ACTION_UP:
                 Ship ship = view.getObjectHandler().getShip();
                 ship.setDirection(Direction.NONE);
                 break;
         }
+    }
+
+    public float getAngle(float diffX, float diffY) {
+        return (float) ((Math.toDegrees(Math.atan2(diffX, diffY))) + 360) % 360;
     }
 }

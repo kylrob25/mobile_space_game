@@ -3,12 +3,15 @@ package me.krob.spacegame.drawable.object.model;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 
+import me.krob.spacegame.MainActivity;
 import me.krob.spacegame.util.Direction;
 import me.krob.spacegame.view.SpaceGameView;
 import me.krob.spacegame.drawable.object.GameObject;
 
 public class Bullet extends GameObject {
+    private static final double MOVEMENT_CORRECTOR = MainActivity.MOVEMENT_CORRECTOR;
     private static final int MOVEMENT_SPEED = 1650;
 
     private static int BULLETS = 1;
@@ -70,7 +73,8 @@ public class Bullet extends GameObject {
     }
 
     public void draw(Canvas canvas, Paint paint) {
-        canvas.drawRect(rect, paint);
+        //canvas.drawRect(rect, paint);
+        canvas.drawCircle(rect.centerX(), rect.centerY(), 20, paint);
     }
 
     public void update(long framesPerSecond) {
@@ -82,8 +86,24 @@ public class Bullet extends GameObject {
             case UP:
                 locY -= movement;
                 break;
+            case UP_RIGHT:
+                locY -= movement * MOVEMENT_CORRECTOR;
+                locX += movement * MOVEMENT_CORRECTOR;
+                break;
+            case UP_LEFT:
+                locY -= movement * MOVEMENT_CORRECTOR;
+                locX -= movement * MOVEMENT_CORRECTOR;
+                break;
             case DOWN:
                 locY += movement;
+                break;
+            case DOWN_RIGHT:
+                locY += movement * MOVEMENT_CORRECTOR;
+                locX += movement * MOVEMENT_CORRECTOR;
+                break;
+            case DOWN_LEFT:
+                locY += movement * MOVEMENT_CORRECTOR;
+                locX -= movement * MOVEMENT_CORRECTOR;
                 break;
             case RIGHT:
                 locX += movement;
