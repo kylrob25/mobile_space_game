@@ -37,7 +37,7 @@ public abstract class Drawable implements IDrawable {
      * @param bitmap
      */
     protected void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
+        //this.bitmap = bitmap;
     }
 
     protected float getHeight() {

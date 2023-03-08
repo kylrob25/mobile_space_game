@@ -15,7 +15,7 @@ import me.krob.spacegame.view.SpaceGameView;
 import me.krob.spacegame.drawable.object.GameObject;
 
 public class Ship extends GameObject {
-    private static final double MOVEMENT_CORRECTOR = MainActivity.MOVEMENT_CORRECTOR;
+    private static final float MOVEMENT_CORRECTOR = MainActivity.MOVEMENT_CORRECTOR;
     private static final int MOVEMENT_SPEED = 350;
     private static final long BULLET_DELAY = 750;
 
@@ -33,7 +33,7 @@ public class Ship extends GameObject {
     private long lastBulletTime;
 
     public Ship(SpaceGameView view){
-        super(view.getScreenY() / 12f, view.getScreenY() / 12f);
+        super(view.getBorderY() * 0.8f, view.getBorderY() * 0.8f);
         this.view = view;
 
         locX = view.getScreenX() / 2f;
@@ -47,7 +47,7 @@ public class Ship extends GameObject {
      * @param context
      */
     public void createBitmap(Context context) {
-        Bitmap decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipup);
+        Bitmap decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.defender);
         bitmap = Bitmap.createScaledBitmap(decoded, (int) width, (int) height, false);
 
         decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipup);
@@ -69,8 +69,8 @@ public class Ship extends GameObject {
      * @param paint
      */
     public void draw(Canvas canvas, Paint paint) {
-        paint.setColor(Color.argb(255,  255, 255, 255));
-        canvas.drawBitmap(bitmap, locX, locY , paint);
+        canvas.drawBitmap(bitmap, locX, locY, null);
+        //canvas.drawRect(rect, paint);
     }
 
     public void handleCollisions() {
@@ -95,7 +95,7 @@ public class Ship extends GameObject {
                 locX -= movement;
                 setBitmap(bitmapLeft);
 
-                shoot(locX, locY + height / 2f, direction);
+                //shoot(locX, locY + height / 2f, direction);
 
                 if (locX <= 0) {
                     locX = view.getScreenX() - width;
@@ -107,7 +107,7 @@ public class Ship extends GameObject {
 
                 setBitmap(bitmapLeft);
 
-                shoot(locX, locY + height / 2f, direction);
+                //shoot(locX, locY + height / 2f, direction);
 
                 if (locX <= 0) {
                     locX = view.getScreenX() - width;
@@ -121,7 +121,7 @@ public class Ship extends GameObject {
 
                 setBitmap(bitmapLeft);
 
-                shoot(locX, locY + height / 2f, direction);
+                //shoot(locX, locY + height / 2f, direction);
 
                 if (locX <= 0) {
                     locX = view.getScreenX() - width;
@@ -134,7 +134,7 @@ public class Ship extends GameObject {
 
                 setBitmap(bitmapRight);
 
-                shoot(locX + width, locY + height / 2f, direction);
+                //shoot(locX + width, locY + height / 2f, direction);
 
                 if ((locX + width) >= view.getScreenX()) {
                     locX = 0;
@@ -146,7 +146,7 @@ public class Ship extends GameObject {
 
                 setBitmap(bitmapRight);
 
-                shoot(locX + width, locY + height / 2f, direction);
+                //shoot(locX + width, locY + height / 2f, direction);
 
                 if ((locX + width) >= view.getScreenX()) {
                     locX = 0;
@@ -160,7 +160,7 @@ public class Ship extends GameObject {
 
                 setBitmap(bitmapRight);
 
-                shoot(locX + width, locY + height / 2f, direction);
+                //shoot(locX + width, locY + height / 2f, direction);
 
                 if ((locX + width) >= view.getScreenX()) {
                     locX = 0;
@@ -173,7 +173,7 @@ public class Ship extends GameObject {
 
                 setBitmap(bitmapUp);
 
-                shoot(locX + width / 2f, locY, direction);
+                //shoot(locX + width / 2f, locY, direction);
 
                 if (locY + height <= 0) {
                     locY = view.getScreenY();
@@ -183,13 +183,15 @@ public class Ship extends GameObject {
                 locY += movement;
                 setBitmap(bitmapDown);
 
-                shoot(locX + width / 2f, locY + height, direction);
+                //shoot(locX + width / 2f, locY + height, direction);
 
                 if (locY >= view.getScreenY()) {
                     locY = 0 - height;
                 }
                 break;
         }
+
+        shoot(locX + width / 2f, locY, Direction.UP);
 
         updateRect();
     }
@@ -198,7 +200,7 @@ public class Ship extends GameObject {
         long now = System.currentTimeMillis();
 
         if (now - lastBulletTime > bulletDelay) {
-            Bullet bullet = new Bullet(view);
+            Bullet bullet = new Bullet(this, view);
 
             view.getObjectHandler().addBullet(bullet);
             bullet.shoot(startX, startY, direction);

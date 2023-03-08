@@ -6,25 +6,28 @@ import android.graphics.Paint;
 import android.util.Log;
 
 import me.krob.spacegame.MainActivity;
+import me.krob.spacegame.drawable.Drawable;
 import me.krob.spacegame.util.Direction;
 import me.krob.spacegame.view.SpaceGameView;
 import me.krob.spacegame.drawable.object.GameObject;
 
 public class Bullet extends GameObject {
-    private static final double MOVEMENT_CORRECTOR = MainActivity.MOVEMENT_CORRECTOR;
-    private static final int MOVEMENT_SPEED = 1650;
+    private static final float MOVEMENT_CORRECTOR = MainActivity.MOVEMENT_CORRECTOR;
+    private static final int MOVEMENT_SPEED = 950;
 
     private static int BULLETS = 1;
     private final int id = BULLETS++;
 
+    private final GameObject owner;
     private final SpaceGameView view;
 
-    private Direction direction = Direction.NONE;
+    private Direction direction = Direction.UP;
     private boolean active;
     private int movementSpeed = MOVEMENT_SPEED;
 
-    public Bullet(SpaceGameView view) {
+    public Bullet(GameObject owner, SpaceGameView view) {
         super(0f, 0f);
+        this.owner = owner;
         this.view = view;
 
         createBitmap(view.getContext());

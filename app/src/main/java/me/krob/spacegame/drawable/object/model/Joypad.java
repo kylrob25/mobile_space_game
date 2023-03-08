@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import me.krob.spacegame.drawable.Drawable;
@@ -48,13 +47,7 @@ public class Joypad extends Drawable {
     }
 
     public void draw(Canvas canvas, Paint paint) {
-        // Debug
-        //canvas.drawRect(rect, paint);
-        //Arrays.asList(up, down, left, right).forEach(rect -> canvas.drawRect(rect, paint));
-
-        paint.setAlpha(40);
-        canvas.drawBitmap(bitmap, minX, minY, paint);
-        paint.setAlpha(100);
+        canvas.drawBitmap(bitmap, minX, minY, null);
     }
 
     public void onTouchEvent(MotionEvent event) {

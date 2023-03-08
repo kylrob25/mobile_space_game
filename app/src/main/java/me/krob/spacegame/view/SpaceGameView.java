@@ -14,14 +14,15 @@ import me.krob.spacegame.handler.GameObjectHandler;
 import me.krob.spacegame.handler.ScoreHandler;
 
 public class SpaceGameView extends SurfaceView implements Runnable {
-    private static final String TOP_TEXT = "Score: %s Lives: %s FPS: %s";
-
     private final Context context;
     private final SurfaceHolder holder;
+
     private final Paint paint;
 
     private final int screenX;
     private final int screenY;
+
+    private final float borderY;
 
     private final ScoreHandler scoreHandler;
     private final GameObjectHandler objectHandler;
@@ -37,10 +38,15 @@ public class SpaceGameView extends SurfaceView implements Runnable {
 
         context = ctx;
         holder = getHolder();
+
         paint = new Paint();
+        paint.setTextSize(40);
+        paint.setColor(Color.GREEN);
 
         screenX = x;
         screenY = y;
+
+        borderY = screenY / 8f;
 
         scoreHandler = new ScoreHandler();
         objectHandler = new GameObjectHandler(this);
@@ -72,9 +78,10 @@ public class SpaceGameView extends SurfaceView implements Runnable {
      * Updating the object handler
      */
     private void update() {
-        if (framesPerSecond > 0) {
-            objectHandler.update(framesPerSecond);
+        if (scoreHandler.getLives() == 0) {
         }
+
+        objectHandler.update(framesPerSecond + 1);
     }
 
     /**
@@ -88,10 +95,15 @@ public class SpaceGameView extends SurfaceView implements Runnable {
 
             objectHandler.draw(canvas, paint);
 
+            drawBorder(canvas);
             drawText(canvas);
 
             holder.unlockCanvasAndPost(canvas); // Unlock the canvas
         }
+    }
+
+    private void drawBorder(Canvas canvas) {
+        canvas.drawLine(0, borderY, screenX, borderY, paint);
     }
 
     /**
@@ -105,9 +117,8 @@ public class SpaceGameView extends SurfaceView implements Runnable {
      * Drawing the display text
      */
     private void drawText(Canvas canvas) {
-        paint.setColor(Color.argb(255,  249, 129, 0)); // Set the colour
-        paint.setTextSize(50); // Set the text size
-        canvas.drawText(String.format(TOP_TEXT, scoreHandler.getScore(), scoreHandler.getLives(), framesPerSecond), 10,50, paint); // Draw the text
+        //canvas.drawText(String.format(TOP_TEXT, scoreHandler.getScore(), scoreHandler.getLives(), framesPerSecond), 10,50, paint); // Draw the text
+        canvas.drawText("FPS: " + framesPerSecond, 10, 50, paint);
     }
 
     /**
@@ -156,5 +167,9 @@ public class SpaceGameView extends SurfaceView implements Runnable {
 
     public float getScreenY() {
         return screenY;
+    }
+
+    public float getBorderY() {
+        return borderY;
     }
 }

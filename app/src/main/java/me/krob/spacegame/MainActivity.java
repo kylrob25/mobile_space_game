@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import me.krob.spacegame.view.SpaceGameView;
 
 public class MainActivity extends AppCompatActivity {
-    public static final double MOVEMENT_CORRECTOR = 0.7707;
+    public static final float MOVEMENT_CORRECTOR = 0.77f;
 
     private SpaceGameView spaceGameView;
 
