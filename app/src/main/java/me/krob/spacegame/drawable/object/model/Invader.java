@@ -24,6 +24,9 @@ public class Invader extends GameObject {
 
     private long lastBulletTime;
 
+    private Bitmap dmgBitmap;
+    private long lastDamageTime;
+
     public Invader(SpaceGameView view) {
         super(GameObjectType.INVADER, view.getBorderY() * 0.6f, view.getBorderY() * 0.5f);
         this.view = view;
@@ -37,13 +40,25 @@ public class Invader extends GameObject {
     public void createBitmap(Context context) {
         Bitmap decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.invader1);
         bitmap = Bitmap.createScaledBitmap(decoded, (int) width, (int) height, false);
+
+        decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.invader_dmg);
+        dmgBitmap = Bitmap.createScaledBitmap(decoded, (int) width, (int) height, false);
     }
 
     public void draw(Canvas canvas) {
+        if (System.currentTimeMillis() - lastDamageTime < 500) {
+            canvas.drawBitmap(dmgBitmap, locX, locY, null);
+            return;
+        }
+
         canvas.drawBitmap(bitmap, locX, locY, null);
     }
 
     public void update(long framesPerSecond) {
+        if (movementSpeed > 1000) {
+            movementSpeed = MOVEMENT_SPEED;
+        }
+
         long movement = movementSpeed / framesPerSecond;
 
         Defender defender = view.getObjectHandler().getDefender();
@@ -97,5 +112,13 @@ public class Invader extends GameObject {
 
     public void handleCollisions() {
 
+    }
+
+    public void incrementMovement(int speed) {
+        movementSpeed += speed;
+    }
+
+    public void setLastDamageTime(long lastBulletTime) {
+        this.lastDamageTime = lastBulletTime;
     }
 }

@@ -79,10 +79,9 @@ public class SpaceGameView extends SurfaceView implements Runnable {
      * Updating the object handler
      */
     private void update() {
-        if (scoreHandler.getLives() == 0) {
+        if (framesPerSecond > 0) {
+            objectHandler.update(framesPerSecond);
         }
-
-        objectHandler.update(framesPerSecond + 1);
     }
 
     /**

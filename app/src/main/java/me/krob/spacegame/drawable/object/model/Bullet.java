@@ -70,10 +70,14 @@ public class Bullet extends GameObject {
         // TODO: Animation/Sound?
         switch (owner.getType()) {
             case DEFENDER:
-                if (intersects(objectHandler.getInvader())) {
+                Invader invader = objectHandler.getInvader();
+                if (intersects(invader)) {
                     destroy();
 
                     scoreHandler.incrementScore(20);
+
+                    invader.incrementMovement(75);
+                    invader.setLastDamageTime(System.currentTimeMillis());
                     return;
                 }
 
@@ -81,6 +85,8 @@ public class Bullet extends GameObject {
                     if (intersects(bullet)) {
                         destroy();
                         bullet.destroy();
+
+                        scoreHandler.incrementScore(5);
                     }
                 });
                 break;
