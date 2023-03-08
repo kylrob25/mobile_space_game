@@ -10,12 +10,14 @@ import java.util.List;
 
 import me.krob.spacegame.drawable.object.model.Bullet;
 import me.krob.spacegame.drawable.object.model.Joypad;
+import me.krob.spacegame.drawable.object.model.Opponent;
 import me.krob.spacegame.drawable.object.model.Ship;
 import me.krob.spacegame.view.SpaceGameView;
 
 public class GameObjectHandler {
     private final Ship ship;
     private final Joypad joypad;
+    private final Opponent opponent;
 
     private final List<Bullet> bullets = new ArrayList<>();
     private final List<Bullet> expiredBullets = new ArrayList<>();
@@ -23,10 +25,12 @@ public class GameObjectHandler {
     public GameObjectHandler(SpaceGameView view) {
         joypad = new Joypad(view);
         ship = new Ship(view);
+        opponent = new Opponent(view);
     }
 
     public void update(long framesPerSecond) {
         ship.update(framesPerSecond);
+        opponent.update(framesPerSecond);
 
         bullets.forEach(bullet -> {
             if (bullet.isActive()) {
@@ -44,6 +48,7 @@ public class GameObjectHandler {
     public void draw(Canvas canvas, Paint paint) {
         ship.draw(canvas, paint);
         joypad.draw(canvas, paint);
+        opponent.draw(canvas, paint);
 
         bullets.forEach(bullet -> {
             if (bullet.isActive()) {

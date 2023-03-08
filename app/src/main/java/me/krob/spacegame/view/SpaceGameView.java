@@ -104,7 +104,8 @@ public class SpaceGameView extends SurfaceView implements Runnable {
     }
 
     private void drawBorder(Canvas canvas) {
-        canvas.drawLine(0, borderY, screenX, borderY, paint);
+        // Only for debug purposes
+        //canvas.drawLine(0, borderY, screenX, borderY, paint);
         //canvas.drawLine(0, borderY1, screenX, borderY1, paint);
     }
 
