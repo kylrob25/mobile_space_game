@@ -1,11 +1,15 @@
 package me.krob.spacegame.util;
 
+import java.util.Random;
+
 public enum Direction {
     NONE,
     UP, DOWN,
     UP_RIGHT, DOWN_RIGHT,
     UP_LEFT, DOWN_LEFT,
     LEFT, RIGHT;
+
+    private static final Random RANDOM = new Random();
 
     public boolean isHorizontal() {
         return this == LEFT || this == RIGHT;

@@ -2,6 +2,7 @@ package me.krob.spacegame.drawable.object.model;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 
@@ -24,6 +25,8 @@ public class Bullet extends GameObject {
     private final GameObject owner;
     private final SpaceGameView view;
 
+    private final Paint paint;
+
     private Direction direction = Direction.UP;
     private boolean active;
     private int movementSpeed = MOVEMENT_SPEED;
@@ -32,6 +35,17 @@ public class Bullet extends GameObject {
         super(GameObjectType.BULLET, 0f, 0f);
         this.owner = owner;
         this.view = view;
+
+        paint = new Paint();
+
+        switch (owner.getType()) {
+            case DEFENDER:
+                paint.setColor(Color.GREEN);
+                break;
+            case INVADER:
+                paint.setColor(Color.RED);
+                break;
+        }
 
         createBitmap(view.getContext());
     }
@@ -104,7 +118,7 @@ public class Bullet extends GameObject {
         // TODO: Switch to an image rather than drawing the rect
     }
 
-    public void draw(Canvas canvas, Paint paint) {
+    public void draw(Canvas canvas) {
         canvas.drawRect(rect, paint);
         canvas.drawCircle(rect.centerX(), rect.centerY(), 20, paint);
     }
@@ -146,6 +160,10 @@ public class Bullet extends GameObject {
         }
 
         updateRect();
+    }
+
+    public void setMovementSpeed(int movementSpeed){
+        this.movementSpeed = movementSpeed;
     }
 
     public float getImpactY() {

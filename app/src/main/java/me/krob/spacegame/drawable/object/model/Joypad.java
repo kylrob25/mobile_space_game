@@ -46,7 +46,7 @@ public class Joypad extends Drawable {
         bitmap = Bitmap.createScaledBitmap(decoded, (int) getHeight(), (int) getHeight(), false);
     }
 
-    public void draw(Canvas canvas, Paint paint) {
+    public void draw(Canvas canvas) {
         canvas.drawBitmap(bitmap, minX, minY, null);
     }
 

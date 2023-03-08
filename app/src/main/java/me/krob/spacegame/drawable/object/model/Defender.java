@@ -51,7 +51,7 @@ public class Defender extends GameObject {
      * @param canvas
      * @param paint
      */
-    public void draw(Canvas canvas, Paint paint) {
+    public void draw(Canvas canvas) {
         canvas.drawBitmap(bitmap, locX, locY, null);
         //canvas.drawRect(rect, paint);
     }

@@ -13,4 +13,12 @@ public abstract class GameObject extends Drawable implements IGameObject {
     public GameObjectType getType() {
         return type;
     }
+
+    public float getLocX() {
+        return locX;
+    }
+
+    public float getLocY() {
+        return locY;
+    }
 }

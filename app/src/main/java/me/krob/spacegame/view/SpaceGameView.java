@@ -94,7 +94,7 @@ public class SpaceGameView extends SurfaceView implements Runnable {
 
             drawBackground(canvas);
 
-            objectHandler.draw(canvas, paint);
+            objectHandler.draw(canvas);
 
             drawBorder(canvas);
             drawText(canvas);

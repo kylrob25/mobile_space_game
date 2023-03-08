@@ -7,7 +7,7 @@ import android.graphics.RectF;
 
 public interface IDrawable {
     void createBitmap(Context context);
-    void draw(Canvas canvas, Paint paint);
+    void draw(Canvas canvas);
 
     RectF getRect();
 }

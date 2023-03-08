@@ -45,14 +45,14 @@ public class GameObjectHandler {
         });
     }
 
-    public void draw(Canvas canvas, Paint paint) {
-        defender.draw(canvas, paint);
-        joypad.draw(canvas, paint);
-        invader.draw(canvas, paint);
+    public void draw(Canvas canvas) {
+        defender.draw(canvas);
+        joypad.draw(canvas);
+        invader.draw(canvas);
 
         bullets.forEach(bullet -> {
             if (bullet.isActive()) {
-                bullet.draw(canvas, paint);
+                bullet.draw(canvas);
             }
         });
     }
