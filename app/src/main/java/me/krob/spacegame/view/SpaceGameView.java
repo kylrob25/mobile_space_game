@@ -121,7 +121,7 @@ public class SpaceGameView extends SurfaceView implements Runnable {
      */
     private void drawText(Canvas canvas) {
         //canvas.drawText(String.format(TOP_TEXT, scoreHandler.getScore(), scoreHandler.getLives(), framesPerSecond), 10,50, paint); // Draw the text
-        canvas.drawText("FPS: " + framesPerSecond, 10, 50, paint);
+        canvas.drawText(String.format("FPS: %s Score: %s Lives: %s", framesPerSecond, scoreHandler.getScore(), scoreHandler.getLives()), 10, 50, paint);
     }
 
     /**
@@ -162,6 +162,10 @@ public class SpaceGameView extends SurfaceView implements Runnable {
 
     public GameObjectHandler getObjectHandler() {
         return objectHandler;
+    }
+
+    public ScoreHandler getScoreHandler() {
+        return scoreHandler;
     }
 
     public float getScreenX() {

@@ -8,22 +8,23 @@ import android.graphics.Paint;
 
 import me.krob.spacegame.R;
 import me.krob.spacegame.drawable.object.GameObject;
+import me.krob.spacegame.drawable.object.GameObjectType;
 import me.krob.spacegame.util.Direction;
 import me.krob.spacegame.view.SpaceGameView;
 
-public class Opponent extends GameObject {
+public class Invader extends GameObject {
     private static final int MOVEMENT_SPEED = 650;
 
     private final SpaceGameView view;
 
     private Direction direction = Direction.RIGHT;
 
-    public Opponent(SpaceGameView view) {
-        super(view.getBorderY() * 0.7f, view.getBorderY() * 0.7f);
+    public Invader(SpaceGameView view) {
+        super(GameObjectType.INVADER, view.getBorderY() * 0.6f, view.getBorderY() * 0.5f);
         this.view = view;
 
         locX = view.getScreenX() / 2f;
-        locY = (view.getBorderY() / 2f);
+        locY = view.getBorderY() / 2f;
 
         createBitmap(view.getContext());
     }
@@ -49,13 +50,15 @@ public class Opponent extends GameObject {
                 locX += movement;
                 break;
             case LEFT:
-                if (locX + width <= 0) {
+                if (locX <= 0) {
                     direction = Direction.RIGHT;
                     return;
                 }
                 locX -= movement;
                 break;
         }
+
+        updateRect();
     }
 
     public void handleCollisions() {

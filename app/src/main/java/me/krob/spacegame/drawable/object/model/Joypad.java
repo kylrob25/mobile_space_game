@@ -59,15 +59,15 @@ public class Joypad extends Drawable {
                 float y = event.getY();
 
                 if (rect.contains(x, y)) {
-                    Ship ship = view.getObjectHandler().getShip();
+                    Defender defender = view.getObjectHandler().getDefender();
                     if (up.contains(x, y)) {
-                        ship.setDirection(Direction.UP);
+                        defender.setDirection(Direction.UP);
                     } else if (down.contains(x, y)) {
-                        ship.setDirection(Direction.DOWN);
+                        defender.setDirection(Direction.DOWN);
                     } else if (right.contains(x, y)) {
-                        ship.setDirection(Direction.RIGHT);
+                        defender.setDirection(Direction.RIGHT);
                     } else if (left.contains(x, y)) {
-                        ship.setDirection(Direction.LEFT);
+                        defender.setDirection(Direction.LEFT);
                     }
                 }
 
@@ -85,15 +85,15 @@ public class Joypad extends Drawable {
                         return;
                     }
 
-                    Ship ship = view.getObjectHandler().getShip();
+                    Defender defender = view.getObjectHandler().getDefender();
                     float angle = getAngle(diffX, diffY);
-                    ship.setDirection(Direction.fromAngle(angle));
+                    defender.setDirection(Direction.fromAngle(angle));
                 }
                 break;
             }
             case MotionEvent.ACTION_UP:
-                Ship ship = view.getObjectHandler().getShip();
-                ship.setDirection(Direction.NONE);
+                Defender defender = view.getObjectHandler().getDefender();
+                defender.setDirection(Direction.NONE);
                 break;
         }
     }

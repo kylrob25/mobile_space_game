@@ -7,6 +7,9 @@ import android.util.Log;
 
 import me.krob.spacegame.MainActivity;
 import me.krob.spacegame.drawable.Drawable;
+import me.krob.spacegame.drawable.object.GameObjectType;
+import me.krob.spacegame.handler.GameObjectHandler;
+import me.krob.spacegame.handler.ScoreHandler;
 import me.krob.spacegame.util.Direction;
 import me.krob.spacegame.view.SpaceGameView;
 import me.krob.spacegame.drawable.object.GameObject;
@@ -26,22 +29,48 @@ public class Bullet extends GameObject {
     private int movementSpeed = MOVEMENT_SPEED;
 
     public Bullet(GameObject owner, SpaceGameView view) {
-        super(0f, 0f);
+        super(GameObjectType.BULLET, 0f, 0f);
         this.owner = owner;
         this.view = view;
 
         createBitmap(view.getContext());
     }
 
+    private void destroy() {
+        active = false;
+        view.getObjectHandler().removeBullet(this);
+    }
+
     public void handleCollisions() {
-        // TODO: Check for opponents
         if (getImpactY() < 0 ||
                 getImpactY() > view.getScreenY() ||
                 getImpactX() < 0 ||
                 getImpactX() > view.getScreenX()) {
-            active = false;
-            view.getObjectHandler().removeBullet(this);
+            destroy();
+            return;
         }
+
+        GameObjectHandler objectHandler = view.getObjectHandler();
+        ScoreHandler scoreHandler = view.getScoreHandler();
+
+        // TODO: Animation/Sound?
+        switch (owner.getType()) {
+            case DEFENDER:
+                if (intersects(objectHandler.getInvader())) {
+                    destroy();
+
+                    scoreHandler.incrementScore(20);
+                }
+                break;
+            case INVADER:
+                if (intersects(objectHandler.getDefender())) {
+                    destroy();
+
+                    scoreHandler.decrementLives(1);
+                }
+                break;
+        }
+
     }
 
     public void shoot(float startX, float startY, Direction direction) {
@@ -76,7 +105,7 @@ public class Bullet extends GameObject {
     }
 
     public void draw(Canvas canvas, Paint paint) {
-        //canvas.drawRect(rect, paint);
+        canvas.drawRect(rect, paint);
         canvas.drawCircle(rect.centerX(), rect.centerY(), 20, paint);
     }
 

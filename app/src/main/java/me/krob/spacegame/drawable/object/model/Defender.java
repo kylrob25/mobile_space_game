@@ -4,21 +4,20 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 import me.krob.spacegame.MainActivity;
+import me.krob.spacegame.drawable.object.GameObjectType;
 import me.krob.spacegame.handler.GameObjectHandler;
 import me.krob.spacegame.util.Direction;
 import me.krob.spacegame.R;
 import me.krob.spacegame.view.SpaceGameView;
 import me.krob.spacegame.drawable.object.GameObject;
 
-public class Ship extends GameObject {
+public class Defender extends GameObject {
     private static final float MOVEMENT_CORRECTOR = MainActivity.MOVEMENT_CORRECTOR;
     private static final int MOVEMENT_SPEED = 350;
-    private static final long BULLET_DELAY = 750;
+    private static final long BULLET_DELAY = 450;
 
     private final SpaceGameView view;
 
@@ -28,8 +27,8 @@ public class Ship extends GameObject {
     private long bulletDelay = BULLET_DELAY;
     private long lastBulletTime;
 
-    public Ship(SpaceGameView view){
-        super(view.getBorderY() * 0.8f, view.getBorderY() * 0.8f);
+    public Defender(SpaceGameView view){
+        super(GameObjectType.DEFENDER, view.getBorderY() * 0.8f, view.getBorderY() * 0.8f);
         this.view = view;
 
         locX = view.getScreenX() / 2f;
