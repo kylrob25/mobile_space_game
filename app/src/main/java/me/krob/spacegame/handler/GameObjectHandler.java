@@ -6,7 +6,10 @@ import android.view.MotionEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import me.krob.spacegame.drawable.object.GameObjectType;
 import me.krob.spacegame.drawable.object.model.Bullet;
 import me.krob.spacegame.drawable.object.model.Joypad;
 import me.krob.spacegame.drawable.object.model.Invader;
@@ -79,5 +82,13 @@ public class GameObjectHandler {
 
     public Joypad getJoypad() {
         return joypad;
+    }
+
+    public List<Bullet> getBullets() {
+        return bullets;
+    }
+
+    public Stream<Bullet> getBulletsByOwner(GameObjectType type) {
+        return bullets.stream().filter(bullet -> bullet.getOwner().getType() == type);
     }
 }

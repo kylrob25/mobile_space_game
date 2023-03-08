@@ -74,7 +74,15 @@ public class Bullet extends GameObject {
                     destroy();
 
                     scoreHandler.incrementScore(20);
+                    return;
                 }
+
+                objectHandler.getBulletsByOwner(GameObjectType.INVADER).forEach(bullet -> {
+                    if (intersects(bullet)) {
+                        destroy();
+                        bullet.destroy();
+                    }
+                });
                 break;
             case INVADER:
                 if (intersects(objectHandler.getDefender())) {
@@ -103,14 +111,15 @@ public class Bullet extends GameObject {
     private void updateDirection(Direction direction) {
         this.direction = direction;
 
-        float size = view.getScreenY() / 25f;
-
-        if (direction.isHorizontal()) {
-            width = size;
-            height = 2f;
-        } else {
-            height = size;
-            width = 2f;
+        switch (owner.getType()) {
+            case INVADER:
+                height = 25;
+                width = 25;
+                break;
+            case DEFENDER:
+                height = view.getScreenY() / 25f;
+                width = 5f;
+                break;
         }
     }
 
@@ -119,8 +128,15 @@ public class Bullet extends GameObject {
     }
 
     public void draw(Canvas canvas) {
+        switch (owner.getType()) {
+            case INVADER:
+                canvas.drawCircle(rect.centerX(), rect.centerY(), 25, paint);
+                break;
+            case DEFENDER:
+                canvas.drawRect(rect, paint);
+                break;
+        }
         canvas.drawRect(rect, paint);
-        canvas.drawCircle(rect.centerX(), rect.centerY(), 20, paint);
     }
 
     public void update(long framesPerSecond) {
@@ -183,5 +199,9 @@ public class Bullet extends GameObject {
 
     public int getId() {
         return id;
+    }
+
+    public GameObject getOwner() {
+        return owner;
     }
 }

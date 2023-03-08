@@ -59,20 +59,22 @@ public class Invader extends GameObject {
 
         switch (direction) {
             case RIGHT:
-                shoot(locX + width, locY + height / 2f, bulletDirection);
                 if (locX + width >= view.getScreenX()) {
                     direction = Direction.LEFT;
                     return;
                 }
+
                 locX += movement;
+                shoot(locX + width, locY + height / 2f, bulletDirection);
                 break;
             case LEFT:
-                shoot(locX, locY + height / 2f, bulletDirection);
                 if (locX <= 0) {
                     direction = Direction.RIGHT;
                     return;
                 }
+
                 locX -= movement;
+                shoot(locX, locY + height / 2f, bulletDirection);
                 break;
         }
 
