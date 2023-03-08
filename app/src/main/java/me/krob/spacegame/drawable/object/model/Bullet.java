@@ -60,7 +60,7 @@ public class Bullet extends GameObject {
     private void updateDirection(Direction direction) {
         this.direction = direction;
 
-        float size = view.getScreenY() / 20f;
+        float size = view.getScreenY() / 25f;
 
         if (direction.isHorizontal()) {
             width = size;

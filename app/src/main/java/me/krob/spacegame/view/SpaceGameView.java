@@ -22,7 +22,7 @@ public class SpaceGameView extends SurfaceView implements Runnable {
     private final int screenX;
     private final int screenY;
 
-    private final float borderY;
+    private final float borderY, borderY1;
 
     private final ScoreHandler scoreHandler;
     private final GameObjectHandler objectHandler;
@@ -47,6 +47,7 @@ public class SpaceGameView extends SurfaceView implements Runnable {
         screenY = y;
 
         borderY = screenY / 8f;
+        borderY1 = screenY - (screenY / 10f);
 
         scoreHandler = new ScoreHandler();
         objectHandler = new GameObjectHandler(this);
@@ -104,6 +105,7 @@ public class SpaceGameView extends SurfaceView implements Runnable {
 
     private void drawBorder(Canvas canvas) {
         canvas.drawLine(0, borderY, screenX, borderY, paint);
+        //canvas.drawLine(0, borderY1, screenX, borderY1, paint);
     }
 
     /**
@@ -171,5 +173,9 @@ public class SpaceGameView extends SurfaceView implements Runnable {
 
     public float getBorderY() {
         return borderY;
+    }
+
+    public float getBorderY1() {
+        return borderY1;
     }
 }

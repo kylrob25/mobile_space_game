@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import me.krob.spacegame.MainActivity;
 import me.krob.spacegame.handler.GameObjectHandler;
@@ -92,106 +93,86 @@ public class Ship extends GameObject {
 
         switch (direction) {
             case LEFT:
-                locX -= movement;
-                setBitmap(bitmapLeft);
-
-                //shoot(locX, locY + height / 2f, direction);
-
-                if (locX <= 0) {
-                    locX = view.getScreenX() - width;
+                if (locX > 0) {
+                    locX -= movement;
                 }
+
+                setBitmap(bitmapLeft);
+                shoot(locX, locY + height / 2f, Direction.UP);
                 break;
             case UP_LEFT:
-                locX -= movement * MOVEMENT_CORRECTOR;
-                locY -= movement * MOVEMENT_CORRECTOR;
+                if (locX > 0) {
+                    locX -= movement * MOVEMENT_CORRECTOR;
+                }
+
+                if (locY > view.getBorderY()) {
+                    locY -= movement * MOVEMENT_CORRECTOR;
+                }
 
                 setBitmap(bitmapLeft);
-
-                //shoot(locX, locY + height / 2f, direction);
-
-                if (locX <= 0) {
-                    locX = view.getScreenX() - width;
-                } else if (locY + height <= 0) {
-                    locY = view.getScreenY();
-                }
+                shoot(locX, locY + height / 2f, Direction.UP);
                 break;
             case DOWN_LEFT:
-                locX -= movement * MOVEMENT_CORRECTOR;
-                locY += movement * MOVEMENT_CORRECTOR;
+                if (locX > 0) {
+                    locX -= movement * MOVEMENT_CORRECTOR;
+                }
+
+                if (locY + height < view.getBorderY1()) {
+                    locY += movement * MOVEMENT_CORRECTOR;
+                }
 
                 setBitmap(bitmapLeft);
-
-                //shoot(locX, locY + height / 2f, direction);
-
-                if (locX <= 0) {
-                    locX = view.getScreenX() - width;
-                } else if (locY >= view.getScreenY()) {
-                    locY = 0 - height;
-                }
+                shoot(locX, locY + height / 2f, Direction.UP);
                 break;
             case RIGHT:
-                locX += movement;
+                if (locX + width < view.getScreenX()) {
+                    locX += movement;
+                }
 
                 setBitmap(bitmapRight);
-
-                //shoot(locX + width, locY + height / 2f, direction);
-
-                if ((locX + width) >= view.getScreenX()) {
-                    locX = 0;
-                }
+                shoot(locX + width, locY + height / 2f, Direction.UP);
                 break;
             case DOWN_RIGHT:
-                locX += movement * MOVEMENT_CORRECTOR;
-                locY += movement * MOVEMENT_CORRECTOR;
+                if (locX + width < view.getScreenX()) {
+                    locX += movement * MOVEMENT_CORRECTOR;
+                }
+
+                if (locY + height < view.getBorderY1()) {
+                    locY += movement * MOVEMENT_CORRECTOR;
+                }
 
                 setBitmap(bitmapRight);
-
-                //shoot(locX + width, locY + height / 2f, direction);
-
-                if ((locX + width) >= view.getScreenX()) {
-                    locX = 0;
-                } else if (locY >= view.getScreenY()) {
-                    locY = 0 - height;
-                }
+                shoot(locX + width, locY + height / 2f, Direction.UP);
                 break;
             case UP_RIGHT:
-                locX += movement * MOVEMENT_CORRECTOR;
-                locY -= movement * MOVEMENT_CORRECTOR;
+                if (locX + width < view.getScreenX()) {
+                    locX += movement * MOVEMENT_CORRECTOR;
+                }
+
+                if (locY > view.getBorderY()) {
+                    locY -= movement * MOVEMENT_CORRECTOR;
+                }
 
                 setBitmap(bitmapRight);
-
-                //shoot(locX + width, locY + height / 2f, direction);
-
-                if ((locX + width) >= view.getScreenX()) {
-                    locX = 0;
-                } else if (locY + height <= 0) {
-                    locY = view.getScreenY();
-                }
+                shoot(locX + width, locY + height / 2f, Direction.UP);
                 break;
             case UP:
-                locY -= movement;
+                if (locY > view.getBorderY()) {
+                    locY -= movement;
+                }
 
                 setBitmap(bitmapUp);
-
-                //shoot(locX + width / 2f, locY, direction);
-
-                if (locY + height <= 0) {
-                    locY = view.getScreenY();
-                }
+                shoot(locX + width / 2f, locY, Direction.UP);
                 break;
             case DOWN:
-                locY += movement;
-                setBitmap(bitmapDown);
-
-                //shoot(locX + width / 2f, locY + height, direction);
-
-                if (locY >= view.getScreenY()) {
-                    locY = 0 - height;
+                if (locY + height < view.getBorderY1()) {
+                    locY += movement;
                 }
+
+                setBitmap(bitmapDown);
+                shoot(locX + width / 2f, locY + height, Direction.UP);
                 break;
         }
-
-        shoot(locX + width / 2f, locY, Direction.UP);
 
         updateRect();
     }
