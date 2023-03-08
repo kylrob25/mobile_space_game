@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 
 import me.krob.spacegame.R;
 import me.krob.spacegame.drawable.object.GameObject;
@@ -14,7 +13,7 @@ import me.krob.spacegame.view.SpaceGameView;
 
 public class Invader extends GameObject {
     private static final int MOVEMENT_SPEED = 650;
-    private static final long BULLET_DELAY = 1000;
+    private static final long BULLET_DELAY = 1750;
 
     private final SpaceGameView view;
 
@@ -85,7 +84,7 @@ public class Invader extends GameObject {
 
         if (now - lastBulletTime > bulletDelay) {
             Bullet bullet = new Bullet(this, view);
-            bullet.setMovementSpeed(300);
+            bullet.setMovementSpeed(400);
 
             view.getObjectHandler().addBullet(bullet);
             bullet.shoot(startX, startY, direction);

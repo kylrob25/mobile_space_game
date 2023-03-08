@@ -16,7 +16,7 @@ import me.krob.spacegame.drawable.object.GameObject;
 
 public class Defender extends GameObject {
     private static final float MOVEMENT_CORRECTOR = MainActivity.MOVEMENT_CORRECTOR;
-    private static final int MOVEMENT_SPEED = 350;
+    private static final int MOVEMENT_SPEED = 450;
     private static final long BULLET_DELAY = 450;
 
     private final SpaceGameView view;
