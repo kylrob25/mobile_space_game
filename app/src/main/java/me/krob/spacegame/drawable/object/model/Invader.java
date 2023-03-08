@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
+import java.util.concurrent.TimeUnit;
+
 import me.krob.spacegame.R;
 import me.krob.spacegame.drawable.object.GameObject;
 import me.krob.spacegame.drawable.object.GameObjectType;
@@ -14,6 +16,7 @@ import me.krob.spacegame.view.SpaceGameView;
 public class Invader extends GameObject {
     private static final int MOVEMENT_SPEED = 650;
     private static final long BULLET_DELAY = 1750;
+    private static final int BULLET_SPEED = 400;
 
     private final SpaceGameView view;
 
@@ -21,11 +24,14 @@ public class Invader extends GameObject {
 
     private int movementSpeed = MOVEMENT_SPEED;
     private long bulletDelay = BULLET_DELAY;
+    private int bulletSpeed = BULLET_SPEED;
 
     private long lastBulletTime;
 
     private Bitmap dmgBitmap;
     private long lastDamageTime;
+    private int damageTotal;
+    private boolean powered;
 
     public Invader(SpaceGameView view) {
         super(GameObjectType.INVADER, view.getBorderY() * 0.6f, view.getBorderY() * 0.5f);
@@ -46,7 +52,7 @@ public class Invader extends GameObject {
     }
 
     public void draw(Canvas canvas) {
-        if (System.currentTimeMillis() - lastDamageTime < 500) {
+        if (powered || System.currentTimeMillis() - lastDamageTime < 250) {
             canvas.drawBitmap(dmgBitmap, locX, locY, null);
             return;
         }
@@ -55,7 +61,7 @@ public class Invader extends GameObject {
     }
 
     public void update(long framesPerSecond) {
-        if (movementSpeed > 1000) {
+        if (movementSpeed > 1500) {
             movementSpeed = MOVEMENT_SPEED;
         }
 
@@ -101,7 +107,7 @@ public class Invader extends GameObject {
 
         if (now - lastBulletTime > bulletDelay) {
             Bullet bullet = new Bullet(this, view);
-            bullet.setMovementSpeed(400);
+            bullet.setMovementSpeed(bulletSpeed);
 
             view.getObjectHandler().addBullet(bullet);
             bullet.shoot(startX, startY, direction);
@@ -110,15 +116,32 @@ public class Invader extends GameObject {
         }
     }
 
+    public void damage() {
+        if (damageTotal++ > 5) {
+            powerUp();
+            view.postDelayed(this::powerDown, TimeUnit.SECONDS.toMillis(10));
+            damageTotal = 0;
+        }
+
+        movementSpeed += 75;
+        lastDamageTime = System.currentTimeMillis();
+    }
+
+    private void powerUp() {
+        powered = true;
+        movementSpeed = 1000;
+        bulletDelay = 1000;
+        bulletSpeed = 500;
+    }
+
+    private void powerDown() {
+        movementSpeed = MOVEMENT_SPEED;
+        bulletDelay = BULLET_DELAY;
+        bulletSpeed = BULLET_SPEED;
+        powered = false;
+    }
+
     public void handleCollisions() {
 
-    }
-
-    public void incrementMovement(int speed) {
-        movementSpeed += speed;
-    }
-
-    public void setLastDamageTime(long lastBulletTime) {
-        this.lastDamageTime = lastBulletTime;
     }
 }

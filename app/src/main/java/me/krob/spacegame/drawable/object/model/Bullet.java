@@ -76,8 +76,7 @@ public class Bullet extends GameObject {
 
                     scoreHandler.incrementScore(20);
 
-                    invader.incrementMovement(75);
-                    invader.setLastDamageTime(System.currentTimeMillis());
+                    invader.damage();
                     return;
                 }
 
