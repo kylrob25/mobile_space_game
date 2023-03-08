@@ -22,11 +22,6 @@ public class Ship extends GameObject {
 
     private final SpaceGameView view;
 
-    private Bitmap bitmapUp;
-    private Bitmap bitmapLeft;
-    private Bitmap bitmapRight;
-    private Bitmap bitmapDown;
-
     public Direction direction = Direction.NONE;
     private int movementSpeed = MOVEMENT_SPEED;
 
@@ -50,18 +45,6 @@ public class Ship extends GameObject {
     public void createBitmap(Context context) {
         Bitmap decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.defender);
         bitmap = Bitmap.createScaledBitmap(decoded, (int) width, (int) height, false);
-
-        decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipup);
-        bitmapUp = Bitmap.createScaledBitmap(decoded, (int) (width), (int) (height),false);
-
-        decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipright);
-        bitmapRight = Bitmap.createScaledBitmap(decoded, (int) (width), (int) (height),false);
-
-        decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipleft);
-        bitmapLeft = Bitmap.createScaledBitmap(decoded, (int) (width), (int) (height),false);
-
-        decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.spaceshipdown);
-        bitmapDown = Bitmap.createScaledBitmap(decoded, (int) (width), (int) (height),false);
     }
 
     /**
@@ -97,7 +80,6 @@ public class Ship extends GameObject {
                     locX -= movement;
                 }
 
-                setBitmap(bitmapLeft);
                 shoot(locX, locY + height / 2f, Direction.UP);
                 break;
             case UP_LEFT:
@@ -109,7 +91,6 @@ public class Ship extends GameObject {
                     locY -= movement * MOVEMENT_CORRECTOR;
                 }
 
-                setBitmap(bitmapLeft);
                 shoot(locX, locY + height / 2f, Direction.UP);
                 break;
             case DOWN_LEFT:
@@ -121,7 +102,6 @@ public class Ship extends GameObject {
                     locY += movement * MOVEMENT_CORRECTOR;
                 }
 
-                setBitmap(bitmapLeft);
                 shoot(locX, locY + height / 2f, Direction.UP);
                 break;
             case RIGHT:
@@ -129,7 +109,6 @@ public class Ship extends GameObject {
                     locX += movement;
                 }
 
-                setBitmap(bitmapRight);
                 shoot(locX + width, locY + height / 2f, Direction.UP);
                 break;
             case DOWN_RIGHT:
@@ -141,7 +120,6 @@ public class Ship extends GameObject {
                     locY += movement * MOVEMENT_CORRECTOR;
                 }
 
-                setBitmap(bitmapRight);
                 shoot(locX + width, locY + height / 2f, Direction.UP);
                 break;
             case UP_RIGHT:
@@ -153,7 +131,6 @@ public class Ship extends GameObject {
                     locY -= movement * MOVEMENT_CORRECTOR;
                 }
 
-                setBitmap(bitmapRight);
                 shoot(locX + width, locY + height / 2f, Direction.UP);
                 break;
             case UP:
@@ -161,7 +138,6 @@ public class Ship extends GameObject {
                     locY -= movement;
                 }
 
-                setBitmap(bitmapUp);
                 shoot(locX + width / 2f, locY, Direction.UP);
                 break;
             case DOWN:
@@ -169,7 +145,6 @@ public class Ship extends GameObject {
                     locY += movement;
                 }
 
-                setBitmap(bitmapDown);
                 shoot(locX + width / 2f, locY + height, Direction.UP);
                 break;
         }
