@@ -14,10 +14,12 @@ import me.krob.spacegame.drawable.object.model.Bullet;
 import me.krob.spacegame.drawable.object.model.Joypad;
 import me.krob.spacegame.drawable.object.model.Invader;
 import me.krob.spacegame.drawable.object.model.Defender;
+import me.krob.spacegame.drawable.object.model.StatusBar;
 import me.krob.spacegame.view.SpaceGameView;
 
 public class GameObjectHandler {
     private final Joypad joypad;
+    private final StatusBar statusBar;
 
     private final Defender defender;
     private final Invader invader;
@@ -27,6 +29,7 @@ public class GameObjectHandler {
 
     public GameObjectHandler(SpaceGameView view) {
         joypad = new Joypad(view);
+        statusBar = new StatusBar(view);
         defender = new Defender(view);
         invader = new Invader(view);
     }
@@ -51,6 +54,7 @@ public class GameObjectHandler {
     public void draw(Canvas canvas) {
         defender.draw(canvas);
         joypad.draw(canvas);
+        statusBar.draw(canvas);
         invader.draw(canvas);
 
         bullets.forEach(bullet -> {

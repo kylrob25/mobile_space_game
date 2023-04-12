@@ -118,8 +118,10 @@ public class Invader extends GameObject {
 
     public void damage() {
         if (damageTotal++ > 5) {
-            powerUp();
+            // Ensuring after 10 seconds the invader is powered back down
             view.postDelayed(this::powerDown, TimeUnit.SECONDS.toMillis(10));
+
+            powerUp();
             damageTotal = 0;
         }
 

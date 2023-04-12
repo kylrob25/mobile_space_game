@@ -1,22 +1,23 @@
 package me.krob.spacegame.handler;
 
 public class ScoreHandler {
-    private static final int LIVES = 4;
-    private static final int SCORE = 10;
-
-    private int lives = LIVES;
-    private int score = SCORE;
+    private long health = 100;
+    private long score = 10;
+    private long lastDamage;
 
     public void saveData() {
         // TODO: Save to a file?
     }
 
-    public void incrementLives(int amount) {
-        lives += amount;
+    public void incrementHealth(int amount) {
+        if (health < 100) {
+            health += amount;
+        }
     }
 
-    public void decrementLives(int amount) {
-        lives -= amount;
+    public void decrementHealth(int amount) {
+        health -= amount;
+        lastDamage = System.currentTimeMillis();
     }
 
     public void incrementScore(int amount) {
@@ -27,11 +28,15 @@ public class ScoreHandler {
         score -= amount;
     }
 
-    public int getLives() {
-        return lives;
+    public long getHealth() {
+        return health;
     }
 
-    public int getScore() {
+    public long getScore() {
         return score;
+    }
+
+    public long getLastDamage() {
+        return lastDamage;
     }
 }

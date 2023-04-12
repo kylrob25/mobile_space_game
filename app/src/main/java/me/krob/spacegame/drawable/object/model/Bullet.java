@@ -93,7 +93,7 @@ public class Bullet extends GameObject {
                 if (intersects(objectHandler.getDefender())) {
                     destroy();
 
-                    scoreHandler.decrementLives(1);
+                    scoreHandler.decrementHealth(1);
                 }
                 break;
         }
