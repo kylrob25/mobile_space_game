@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import me.krob.spacegame.handler.DisplayableHandler;
 import me.krob.spacegame.handler.GameObjectHandler;
 import me.krob.spacegame.handler.ScoreHandler;
 
@@ -26,15 +27,13 @@ public class SpaceGameView extends SurfaceView implements Runnable {
 
     private final ScoreHandler scoreHandler;
     private final GameObjectHandler objectHandler;
+    private final DisplayableHandler displayableHandler;
 
     private Thread thread = null;
     private volatile boolean playing;
     private boolean paused = true;
 
     private long framesPerSecond;
-
-    private Paint restartPaint;
-    private long lastRestart;
 
     public SpaceGameView(Context ctx, int x, int y) {
         super(ctx);
@@ -46,10 +45,6 @@ public class SpaceGameView extends SurfaceView implements Runnable {
         paint.setTextSize(60);
         paint.setColor(Color.GREEN);
 
-        restartPaint = new Paint();
-        restartPaint.setTextSize(100);
-        restartPaint.setColor(Color.RED);
-
         screenX = x;
         screenY = y;
 
@@ -58,12 +53,14 @@ public class SpaceGameView extends SurfaceView implements Runnable {
 
         scoreHandler = new ScoreHandler(this);
         objectHandler = new GameObjectHandler(this);
+        displayableHandler = new DisplayableHandler(this);
     }
 
     public void restartGame() {
         objectHandler.restart();
         scoreHandler.restart();
-        lastRestart = System.currentTimeMillis();
+
+        displayableHandler.getDisplayable("game_over").setActive(true);
     }
 
     /**
@@ -107,6 +104,7 @@ public class SpaceGameView extends SurfaceView implements Runnable {
             drawBackground(canvas);
 
             objectHandler.draw(canvas);
+            displayableHandler.draw(canvas);
 
             drawBorder(canvas);
             drawText(canvas);
@@ -133,11 +131,11 @@ public class SpaceGameView extends SurfaceView implements Runnable {
      */
     private void drawText(Canvas canvas) {
         //canvas.drawText(String.format(TOP_TEXT, scoreHandler.getScore(), scoreHandler.getLives(), framesPerSecond), 10,50, paint); // Draw the text
-        canvas.drawText(String.format("FPS: %s Score: %s Health: %s", framesPerSecond, scoreHandler.getScore(), scoreHandler.getHealth()), 10, 50, paint);
+        //canvas.drawText(String.format("FPS: %s Score: %s Health: %s", framesPerSecond, scoreHandler.getScore(), scoreHandler.getHealth()), 10, 50, paint);
 
-        if (System.currentTimeMillis() - lastRestart < 1000) {
-            canvas.drawText("GAME OVER", (screenX / 2f) - (restartPaint.getTextSize() * 2), screenY / 2f, restartPaint);
-        }
+        //if (System.currentTimeMillis() - lastRestart < 1000) {
+          //  canvas.drawText("GAME OVER", (screenX / 2f) - (restartPaint.getTextSize() * 2), screenY / 2f, restartPaint);
+        //}
     }
 
     /**
@@ -198,5 +196,9 @@ public class SpaceGameView extends SurfaceView implements Runnable {
 
     public float getBorderY1() {
         return borderY1;
+    }
+
+    public long getFramesPerSecond() {
+        return framesPerSecond;
     }
 }
