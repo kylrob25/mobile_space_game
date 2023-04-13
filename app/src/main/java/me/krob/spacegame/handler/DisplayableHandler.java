@@ -3,9 +3,7 @@ package me.krob.spacegame.handler;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import me.krob.spacegame.displayable.Displayable;
@@ -19,6 +17,7 @@ public class DisplayableHandler {
     public DisplayableHandler(SpaceGameView view) {
         this.view = view;
 
+        // Creating our displayables and adding them to the map
         displayableMap.put("score", new Displayable(
                 "Score: 0 ",
                 10,
@@ -44,11 +43,23 @@ public class DisplayableHandler {
         ));
     }
 
+    /**
+     * Drawing each Displayable to the screen
+     * @param canvas
+     */
     public void draw(Canvas canvas) {
+        // Looping through the collection
         displayableMap.values().forEach(displayable -> {
+            // Checking the displayable is active
             if (displayable.isActive()) {
+                // Drawing the displayable
                 displayable.draw(canvas);
 
+                /*
+                Checking whether the Displayable is permanent,
+                if not, we post a delayed task to hide the Displayable
+                after the duration period.
+                 */
                 if (!displayable.isHide() && displayable.getDuration() > 0) {
                     displayable.setHide(true);
 

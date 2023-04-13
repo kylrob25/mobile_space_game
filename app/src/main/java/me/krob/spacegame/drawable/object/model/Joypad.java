@@ -58,6 +58,7 @@ public class Joypad extends Drawable {
                 float x = event.getX();
                 float y = event.getY();
 
+                // Checking the user touched within the joypad area
                 if (rect.contains(x, y)) {
                     Defender defender = view.getObjectHandler().getDefender();
                     if (up.contains(x, y)) {
@@ -77,6 +78,7 @@ public class Joypad extends Drawable {
                 float x = event.getX();
                 float y = event.getY();
 
+                // Checking the user touched within the joypad area
                 if (rect.contains(x, y)) {
                     float diffX = x - rect.centerX();
                     float diffY = y - rect.centerY();
@@ -85,6 +87,12 @@ public class Joypad extends Drawable {
                         return;
                     }
 
+                    /*
+                    Using the difference between the location where the user
+                    touched the screen, and the center of the joypad, we can
+                    calculate the angle and use that to determine which direction
+                    to move.
+                     */
                     Defender defender = view.getObjectHandler().getDefender();
                     float angle = getAngle(diffX, diffY);
                     defender.setDirection(Direction.fromAngle(angle));

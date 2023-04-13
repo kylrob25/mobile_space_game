@@ -6,16 +6,13 @@ import android.graphics.Paint;
 import java.util.function.Consumer;
 
 public class Displayable {
-    private Paint paint;
+    private final Paint paint;
+    private final float locX, locY;
+    private final long duration;
+    private final Consumer<Displayable> update;
 
-    private String text;
-
-    private float locX, locY;
-
-    private long duration;
     private boolean active, hide;
-
-    private Consumer<Displayable> update;
+    private String text;
 
     public Displayable(String text, float locX, float locY, long duration, boolean active, int textSize, int color, Consumer<Displayable> update) {
         this.text = text;
@@ -48,10 +45,6 @@ public class Displayable {
 
     public void setHide(boolean hide) {
         this.hide = hide;
-    }
-
-    public Paint getPaint() {
-        return paint;
     }
 
     public long getDuration() {

@@ -34,6 +34,9 @@ public class GameObjectHandler {
         invader = new Invader(view);
     }
 
+    /**
+     * Restarting the objects
+     */
     public void restart() {
         defender.restart();
         invader.restart();
@@ -42,10 +45,15 @@ public class GameObjectHandler {
         expiredBullets = new ArrayList<>();
     }
 
+    /**
+     * Updating the objects
+     * @param framesPerSecond
+     */
     public void update(long framesPerSecond) {
         defender.update(framesPerSecond);
         invader.update(framesPerSecond);
 
+        // Looping through the bullets and updating if they are active
         bullets.forEach(bullet -> {
             if (bullet.isActive()) {
                 bullet.update(framesPerSecond);

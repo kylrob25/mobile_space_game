@@ -33,28 +33,25 @@ public class StatusBar extends Drawable {
     }
 
     public void createBitmap(Context context) {
-
+        // Do nothing
     }
 
     public void draw(Canvas canvas) {
         long health = view.getScoreHandler().getHealth();
 
+        // Ensuring the health is above 0
         if (health > 0) {
+            // Updating the rect
             updateRect(minX, 25, minX + (health * scale), 75);
 
+            // If below half health, we make the status bar red.
             if (health < 50) {
                 canvas.drawRect(rect, damagePaint);
                 return;
             }
 
+            // Drawing the status bar
             canvas.drawRect(rect, paint);
         }
-
-        /* Flashing bar when damaged
-        if (System.currentTimeMillis() - view.getScoreHandler().getLastDamage() < 500) {
-            canvas.drawRect(rect, damagePaint);
-            return;
-        }
-         */
     }
 }

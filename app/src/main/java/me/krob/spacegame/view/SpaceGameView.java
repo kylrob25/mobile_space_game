@@ -56,10 +56,14 @@ public class SpaceGameView extends SurfaceView implements Runnable {
         displayableHandler = new DisplayableHandler(this);
     }
 
+    /**
+     * Restarting the game
+     */
     public void restartGame() {
         objectHandler.restart();
         scoreHandler.restart();
 
+        // Displaying the game over text
         displayableHandler.getDisplayable("game_over").setActive(true);
     }
 
@@ -106,17 +110,8 @@ public class SpaceGameView extends SurfaceView implements Runnable {
             objectHandler.draw(canvas);
             displayableHandler.draw(canvas);
 
-            drawBorder(canvas);
-            drawText(canvas);
-
             holder.unlockCanvasAndPost(canvas); // Unlock the canvas
         }
-    }
-
-    private void drawBorder(Canvas canvas) {
-        // Only for debug purposes
-        //canvas.drawLine(0, borderY, screenX, borderY, paint);
-        //canvas.drawLine(0, borderY1, screenX, borderY1, paint);
     }
 
     /**
@@ -124,18 +119,6 @@ public class SpaceGameView extends SurfaceView implements Runnable {
      */
     private void drawBackground(Canvas canvas) {
         canvas.drawColor(Color.argb(255, 26, 128, 182)); // Draw the background colour
-    }
-
-    /**
-     * Drawing the display text
-     */
-    private void drawText(Canvas canvas) {
-        //canvas.drawText(String.format(TOP_TEXT, scoreHandler.getScore(), scoreHandler.getLives(), framesPerSecond), 10,50, paint); // Draw the text
-        //canvas.drawText(String.format("FPS: %s Score: %s Health: %s", framesPerSecond, scoreHandler.getScore(), scoreHandler.getHealth()), 10, 50, paint);
-
-        //if (System.currentTimeMillis() - lastRestart < 1000) {
-          //  canvas.drawText("GAME OVER", (screenX / 2f) - (restartPaint.getTextSize() * 2), screenY / 2f, restartPaint);
-        //}
     }
 
     /**
