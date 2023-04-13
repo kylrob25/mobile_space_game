@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import me.krob.spacegame.displayable.DisplayableType;
 import me.krob.spacegame.handler.DisplayableHandler;
 import me.krob.spacegame.handler.GameObjectHandler;
 import me.krob.spacegame.handler.ScoreHandler;
@@ -64,7 +65,7 @@ public class SpaceGameView extends SurfaceView implements Runnable {
         scoreHandler.restart();
 
         // Displaying the game over text
-        displayableHandler.getDisplayable("game_over").setActive(true);
+        displayableHandler.display(DisplayableType.GAME_OVER);
     }
 
     /**
@@ -163,6 +164,10 @@ public class SpaceGameView extends SurfaceView implements Runnable {
 
     public ScoreHandler getScoreHandler() {
         return scoreHandler;
+    }
+
+    public DisplayableHandler getDisplayableHandler() {
+        return displayableHandler;
     }
 
     public float getScreenX() {

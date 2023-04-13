@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import java.util.concurrent.TimeUnit;
 
 import me.krob.spacegame.R;
+import me.krob.spacegame.displayable.DisplayableType;
 import me.krob.spacegame.drawable.object.GameObject;
 import me.krob.spacegame.drawable.object.GameObjectType;
 import me.krob.spacegame.util.Direction;
@@ -142,6 +143,7 @@ public class Invader extends GameObject {
         movementSpeed = 1000;
         bulletDelay = 1000;
         bulletSpeed = 500;
+        view.getDisplayableHandler().display(DisplayableType.INVADER_POWER_UP);
     }
 
     private void powerDown() {

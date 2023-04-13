@@ -2,23 +2,24 @@ package me.krob.spacegame.handler;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import me.krob.spacegame.displayable.Displayable;
+import me.krob.spacegame.displayable.DisplayableType;
 import me.krob.spacegame.view.SpaceGameView;
 
 public class DisplayableHandler {
     private final SpaceGameView view;
 
-    private final Map<String, Displayable> displayableMap = new HashMap<>();
+    private final Map<DisplayableType, Displayable> displayableMap = new HashMap<>();
 
     public DisplayableHandler(SpaceGameView view) {
         this.view = view;
 
-        // Creating our displayables and adding them to the map
-        displayableMap.put("score", new Displayable(
+        displayableMap.put(DisplayableType.SCORE, new Displayable(
                 "Score: 0 ",
                 10,
                 50,
@@ -29,14 +30,41 @@ public class DisplayableHandler {
                 ))
         ));
 
-        displayableMap.put("game_over", new Displayable(
-                "GAME OVER",
-                (view.getScreenX() / 2f) - (100 * 2),
-                view.getScreenY() / 2f,
+        Paint paint = new Paint();
+        paint.setTextSize(100);
+        paint.setColor(Color.RED);
+        paint.setTextAlign(Paint.Align.CENTER);
+
+        displayableMap.put(DisplayableType.INVADER_POWER_UP, new Displayable(
+                "INVADER POWER UP",
+                view.getScreenX() / 2f,
+                (view.getScreenY() / 2f) - ((paint.descent() + paint.ascent()) / 2),
                 1500,
-                100,
-                Color.RED
+                false,
+                paint,
+                null
         ));
+
+        displayableMap.put(DisplayableType.GAME_OVER, new Displayable(
+                "GAME OVER",
+                view.getScreenX() / 2f,
+                (view.getScreenY() / 2f) - ((paint.descent() + paint.ascent()) / 2),
+                1500,
+                false,
+                paint,
+                null
+        ));
+    }
+
+    /**
+     * Display a displayable
+     * @param type
+     */
+    public void display(DisplayableType type) {
+        Displayable displayable = displayableMap.get(type);
+        if (displayable != null) {
+            displayable.setActive(true);
+        }
     }
 
     /**
@@ -66,9 +94,5 @@ public class DisplayableHandler {
                 }
             }
         });
-    }
-
-    public Displayable getDisplayable(String id) {
-        return displayableMap.get(id);
     }
 }

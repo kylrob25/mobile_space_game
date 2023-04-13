@@ -6,7 +6,7 @@ public class ScoreHandler {
     private static final long HEALTH = 100L, SCORE = 10L;
     private final SpaceGameView view;
 
-    private long health = HEALTH;
+    private long health = 10;
     private long score = SCORE;
 
     public ScoreHandler(SpaceGameView view) {

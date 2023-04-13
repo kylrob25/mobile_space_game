@@ -26,6 +26,21 @@ public class Displayable {
         paint = new Paint();
         paint.setTextSize(textSize);
         paint.setColor(color);
+        paint.setTextAlign(Paint.Align.CENTER);
+
+        this.update = update;
+    }
+
+    public Displayable(String text, float locX, float locY, long duration, boolean active, Paint paint, Consumer<Displayable> update) {
+        this.text = text;
+
+        this.locX = locX;
+        this.locY = locY;
+
+        this.duration = duration;
+        this.active = active;
+
+        this.paint = paint;
 
         this.update = update;
     }
