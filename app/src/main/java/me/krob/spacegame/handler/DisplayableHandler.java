@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.krob.spacegame.displayable.AlertDisplayable;
 import me.krob.spacegame.displayable.Displayable;
 import me.krob.spacegame.displayable.DisplayableType;
 import me.krob.spacegame.view.SpaceGameView;
@@ -35,24 +36,11 @@ public class DisplayableHandler {
         paint.setColor(Color.RED);
         paint.setTextAlign(Paint.Align.CENTER);
 
-        displayableMap.put(DisplayableType.INVADER_POWER_UP, new Displayable(
-                "INVADER POWER UP",
-                view.getScreenX() / 2f,
-                (view.getScreenY() / 2f) - ((paint.descent() + paint.ascent()) / 2),
-                1500,
-                false,
-                paint,
-                null
+        displayableMap.put(DisplayableType.INVADER_POWER_UP, new AlertDisplayable(
+                "INVADER POWER UP!", view.getScreenX(), view.getScreenY(), paint
         ));
-
-        displayableMap.put(DisplayableType.GAME_OVER, new Displayable(
-                "GAME OVER",
-                view.getScreenX() / 2f,
-                (view.getScreenY() / 2f) - ((paint.descent() + paint.ascent()) / 2),
-                1500,
-                false,
-                paint,
-                null
+        displayableMap.put(DisplayableType.GAME_OVER, new AlertDisplayable(
+                "GAME OVER!", view.getScreenX(), view.getScreenY(), paint
         ));
     }
 
