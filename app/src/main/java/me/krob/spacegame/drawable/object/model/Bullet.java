@@ -67,7 +67,6 @@ public class Bullet extends GameObject {
         GameObjectHandler objectHandler = view.getObjectHandler();
         ScoreHandler scoreHandler = view.getScoreHandler();
 
-        // TODO: Animation/Sound?
         switch (owner.getType()) {
             case DEFENDER:
                 Invader invader = objectHandler.getInvader();
@@ -93,7 +92,7 @@ public class Bullet extends GameObject {
                 if (intersects(objectHandler.getDefender())) {
                     destroy();
 
-                    scoreHandler.decrementHealth(1);
+                    scoreHandler.decrementHealth(10);
                 }
                 break;
         }

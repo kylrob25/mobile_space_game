@@ -43,6 +43,14 @@ public class Invader extends GameObject {
         createBitmap(view.getContext());
     }
 
+    public void restart() {
+        movementSpeed = MOVEMENT_SPEED;
+        bulletDelay = BULLET_DELAY;
+        bulletSpeed = BULLET_SPEED;
+        direction = Direction.NONE;
+        view.postDelayed(() -> direction = Direction.RIGHT, 1500);
+    }
+
     public void createBitmap(Context context) {
         Bitmap decoded = BitmapFactory.decodeResource(context.getResources(), R.drawable.invader1);
         bitmap = Bitmap.createScaledBitmap(decoded, (int) width, (int) height, false);

@@ -24,14 +24,22 @@ public class GameObjectHandler {
     private final Defender defender;
     private final Invader invader;
 
-    private final List<Bullet> bullets = new ArrayList<>();
-    private final List<Bullet> expiredBullets = new ArrayList<>();
+    private List<Bullet> bullets = new ArrayList<>();
+    private List<Bullet> expiredBullets = new ArrayList<>();
 
     public GameObjectHandler(SpaceGameView view) {
         joypad = new Joypad(view);
         statusBar = new StatusBar(view);
         defender = new Defender(view);
         invader = new Invader(view);
+    }
+
+    public void restart() {
+        defender.restart();
+        invader.restart();
+
+        bullets = new ArrayList<>();
+        expiredBullets = new ArrayList<>();
     }
 
     public void update(long framesPerSecond) {

@@ -37,6 +37,14 @@ public class Defender extends GameObject {
         createBitmap(view.getContext());
     }
 
+    public void restart() {
+        direction = Direction.NONE;
+        movementSpeed = MOVEMENT_SPEED;
+        bulletDelay = BULLET_DELAY;
+        locX = view.getScreenX() / 2f;
+        locY = view.getScreenY() / 2f;
+    }
+
     /**
      * Creating our bitmap images
      * @param context
@@ -49,7 +57,6 @@ public class Defender extends GameObject {
     /**
      * Draw the object
      * @param canvas
-     * @param paint
      */
     public void draw(Canvas canvas) {
         canvas.drawBitmap(bitmap, locX, locY, null);
