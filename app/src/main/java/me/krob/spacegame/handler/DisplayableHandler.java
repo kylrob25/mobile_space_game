@@ -22,8 +22,6 @@ public class DisplayableHandler {
                 "Score: 0 ",
                 10,
                 50,
-                0,
-                true,
                 60,
                 Color.GREEN,
                 update -> update.setText(String.format("FPS: %s Score: %s",
@@ -36,10 +34,8 @@ public class DisplayableHandler {
                 (view.getScreenX() / 2f) - (100 * 2),
                 view.getScreenY() / 2f,
                 1500,
-                false,
                 100,
-                Color.RED,
-                null
+                Color.RED
         ));
     }
 

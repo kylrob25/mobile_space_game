@@ -30,7 +30,16 @@ public class Displayable {
         this.update = update;
     }
 
+    public Displayable(String text, float locX, float locY, int textSize, int color, Consumer<Displayable> update) {
+        this(text, locX, locY, 0, true, textSize, color, update);
+    }
+
+    public Displayable(String text, float locX, float locY, long duration, int textSize, int color) {
+        this(text, locX, locY, duration, false, textSize, color, null);
+    }
+
     public void draw(Canvas canvas) {
+        // Updating the text prior to displaying
         if (update != null) update.accept(this);
         canvas.drawText(text, locX, locY, paint);
     }
